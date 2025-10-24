@@ -1,16 +1,22 @@
 import { Layout } from "@/components/layout/Layout";
+import { HeroSection } from "@/components/home/HeroSection";
+import { FeaturedAccommodations } from "@/components/home/FeaturedAccommodations";
+import { CulturalExperiences } from "@/components/home/CulturalExperiences";
+import { SustainabilityHighlights } from "@/components/home/SustainabilityHighlights";
+import { TestimonialsSlider } from "@/components/home/TestimonialsSlider";
+import { QuickStats } from "@/components/home/QuickStats";
+import { Footer } from "@/components/layout/Footer";
 
 const Index = () => {
   return (
     <Layout>
-      <div className="container py-8">
-        <h1 className="font-montserrat text-4xl font-bold text-primary mb-4">
-          Welcome to Zulu Lami Eco-Resort
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          Authentic eco-friendly accommodation experiences in KwaZulu-Natal, South Africa
-        </p>
-      </div>
+      <HeroSection />
+      <FeaturedAccommodations />
+      <CulturalExperiences />
+      <SustainabilityHighlights />
+      <QuickStats />
+      <TestimonialsSlider />
+      <Footer />
     </Layout>
   );
 };
