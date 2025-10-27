@@ -83,7 +83,7 @@ export const ExperienceCard = ({
             <p className="text-xs text-muted-foreground">per person</p>
           </div>
           
-          <Button>Book Now</Button>
+          <Button variant="outline">View Details</Button>
         </div>
       </div>
     </Card>
