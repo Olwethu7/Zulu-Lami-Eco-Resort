@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { lazy, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -58,9 +59,10 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
+        <ErrorBoundary>
+          <AuthProvider>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/search" element={<Search />} />
             <Route path="/experiences" element={<Experiences />} />
@@ -133,6 +135,7 @@ const App = () => (
           </Routes>
           </Suspense>
         </AuthProvider>
+        </ErrorBoundary>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
