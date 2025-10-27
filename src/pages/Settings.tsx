@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
 
 const Settings = () => {
   const { user } = useAuth();
@@ -141,7 +142,7 @@ const Settings = () => {
                     Need to update your account details? Visit your profile page.
                   </p>
                   <Button variant="outline" asChild>
-                    <a href="/profile">Go to Profile</a>
+                    <Link to="/profile">Go to Profile</Link>
                   </Button>
                 </div>
               </div>
