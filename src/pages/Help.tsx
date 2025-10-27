@@ -160,7 +160,7 @@ const Help = () => {
                 Send us a detailed inquiry
               </p>
               <Button variant="outline" asChild className="w-full">
-                <a href="mailto:ncadmin@estatesales.co.za">
+                <a href="mailto:zululamiecoresort@gmail.com">
                   Email Us
                 </a>
               </Button>
