@@ -1,5 +1,6 @@
 import { Facebook, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export const Footer = () => {
   return (
@@ -30,10 +31,10 @@ export const Footer = () => {
           <div>
             <h4 className="font-montserrat font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="/about" className="opacity-90 hover:opacity-100 transition-opacity">About Us</a></li>
-              <li><a href="/sustainability" className="opacity-90 hover:opacity-100 transition-opacity">Sustainability</a></li>
-              <li><a href="/cultural-heritage" className="opacity-90 hover:opacity-100 transition-opacity">Cultural Heritage</a></li>
-              <li><a href="/contact" className="opacity-90 hover:opacity-100 transition-opacity">Contact</a></li>
+              <li><Link to="/about" className="opacity-90 hover:opacity-100 transition-opacity">About Us</Link></li>
+              <li><Link to="/sustainability" className="opacity-90 hover:opacity-100 transition-opacity">Sustainability</Link></li>
+              <li><Link to="/cultural-heritage" className="opacity-90 hover:opacity-100 transition-opacity">Cultural Heritage</Link></li>
+              <li><Link to="/contact" className="opacity-90 hover:opacity-100 transition-opacity">Contact</Link></li>
             </ul>
           </div>
 
@@ -41,10 +42,10 @@ export const Footer = () => {
           <div>
             <h4 className="font-montserrat font-semibold mb-4">Explore</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="/search" className="opacity-90 hover:opacity-100 transition-opacity">Accommodations</a></li>
-              <li><a href="/experiences" className="opacity-90 hover:opacity-100 transition-opacity">Cultural Experiences</a></li>
-              <li><a href="/local-area" className="opacity-90 hover:opacity-100 transition-opacity">Local Area</a></li>
-              <li><a href="/help" className="opacity-90 hover:opacity-100 transition-opacity">Help & FAQ</a></li>
+              <li><Link to="/search" className="opacity-90 hover:opacity-100 transition-opacity">Accommodations</Link></li>
+              <li><Link to="/experiences" className="opacity-90 hover:opacity-100 transition-opacity">Cultural Experiences</Link></li>
+              <li><Link to="/local-area" className="opacity-90 hover:opacity-100 transition-opacity">Local Area</Link></li>
+              <li><Link to="/help" className="opacity-90 hover:opacity-100 transition-opacity">Help & FAQ</Link></li>
             </ul>
           </div>
 
@@ -66,7 +67,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 flex-shrink-0" />
-                <a href="mailto:ncadmin@estatesales.co.za" className="opacity-90 hover:opacity-100 transition-opacity">ncadmin@estatesales.co.za</a>
+                <a href="mailto:zululamiecoresort@gmail.com" className="opacity-90 hover:opacity-100 transition-opacity">zululamiecoresort@gmail.com</a>
               </li>
             </ul>
           </div>

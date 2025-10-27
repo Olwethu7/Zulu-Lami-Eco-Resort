@@ -1,7 +1,7 @@
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,15 +42,15 @@ export const Header = ({ onMenuToggle }: HeaderProps) => {
         </div>
         
         <nav className="hidden md:flex items-center gap-6">
-          <a href="/" className="text-sm font-medium transition-colors hover:text-primary">
+          <Link to="/" className="text-sm font-medium transition-colors hover:text-primary">
             Home
-          </a>
-          <a href="/search" className="text-sm font-medium transition-colors hover:text-primary">
+          </Link>
+          <Link to="/search" className="text-sm font-medium transition-colors hover:text-primary">
             Search
-          </a>
-          <a href="/experiences" className="text-sm font-medium transition-colors hover:text-primary">
+          </Link>
+          <Link to="/experiences" className="text-sm font-medium transition-colors hover:text-primary">
             Experiences
-          </a>
+          </Link>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -88,9 +88,9 @@ export const Header = ({ onMenuToggle }: HeaderProps) => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <a href="/login" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link to="/login" className="text-sm font-medium transition-colors hover:text-primary">
               Login
-            </a>
+            </Link>
           )}
         </nav>
       </div>
