@@ -13,10 +13,16 @@ export const MapView = ({ accommodations }: MapViewProps) => {
   const [mapboxToken, setMapboxToken] = useState<string>("");
 
   useEffect(() => {
-    // In production, this would come from edge function that retrieves the secret
-    // For now, we'll use a placeholder
-    const token = process.env.MAPBOX_PUBLIC_TOKEN || "";
-    setMapboxToken(token);
+    // Fetch token from Supabase edge function or use hardcoded for now
+    // In production, retrieve this from your Supabase secrets via edge function
+    const fetchToken = async () => {
+      // For now, you need to replace this with your actual Mapbox token
+      // You can get it from https://mapbox.com
+      const token = ""; // Add your Mapbox public token here
+      setMapboxToken(token);
+    };
+    
+    fetchToken();
   }, []);
 
   useEffect(() => {
