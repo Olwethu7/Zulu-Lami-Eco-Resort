@@ -11,6 +11,7 @@ import {
 import { FilterState } from "./SearchFilters";
 import { MapPin, LayoutGrid, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { MapView } from "./MapView";
 
 interface SearchResultsProps {
   filters: FilterState;
@@ -170,9 +171,7 @@ export const SearchResults = ({ filters, searchParams }: SearchResultsProps) => 
           ))}
         </div>
       ) : (
-        <div className="bg-muted rounded-lg h-[600px] flex items-center justify-center">
-          <p className="text-muted-foreground">Map view coming soon</p>
-        </div>
+        <MapView accommodations={accommodations} />
       )}
 
       {/* Pagination */}
