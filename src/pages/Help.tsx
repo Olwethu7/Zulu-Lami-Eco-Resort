@@ -126,7 +126,7 @@ const Help = () => {
                 Quick responses via WhatsApp
               </p>
               <Button variant="outline" asChild className="w-full">
-                <a href="https://wa.me/27832841272" target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/27796560543" target="_blank" rel="noopener noreferrer">
                   Chat Now
                 </a>
               </Button>

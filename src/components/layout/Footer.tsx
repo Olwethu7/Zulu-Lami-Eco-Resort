@@ -20,7 +20,7 @@ export const Footer = () => {
                 </a>
               </Button>
               <Button size="icon" variant="ghost" className="hover:bg-background/20" asChild>
-                <a href="https://wa.me/27832841272" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                <a href="https://wa.me/27796560543" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
                   <MessageCircle className="h-5 w-5" />
                 </a>
               </Button>
@@ -63,7 +63,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4 flex-shrink-0" />
-                <a href="https://wa.me/27832841272" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition-opacity">+27 83 284 1272</a>
+                <a href="https://wa.me/27796560543" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition-opacity">+27 79 656 0543</a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 flex-shrink-0" />

@@ -125,8 +125,8 @@ const Contact = () => {
                   <div>
                     <h3 className="font-montserrat font-semibold text-lg mb-2">WhatsApp</h3>
                     <p className="text-muted-foreground">
-                      <a href="https://wa.me/27832841272" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-                        +27 83 284 1272
+                      <a href="https://wa.me/27796560543" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                        +27 79 656 0543
                       </a>
                     </p>
                   </div>
@@ -225,9 +225,36 @@ const Contact = () => {
               and rich Zulu cultural heritage. Our eco-resort is easily accessible and offers a peaceful retreat 
               from the hustle and bustle of city life.
             </p>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-6">
               Contact us to arrange a visit or to learn more about our accommodation options and cultural experiences.
             </p>
+            
+            {/* Google Maps Embed */}
+            <div className="w-full h-[400px] rounded-lg overflow-hidden border border-border">
+              <iframe
+                title="Zulu Lami Eco Resort Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3566.2!2d32.0!3d-27.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDI0JzAwLjAiUyAzMsKwMDAnMDAuMCJF!5e0!3m2!1sen!2sza!4v1234567890"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            
+            <div className="mt-4 p-4 bg-background rounded-lg">
+              <div className="flex items-start gap-2">
+                <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold text-foreground">Zulu Lami Eco Resort</p>
+                  <p className="text-sm text-muted-foreground">
+                    Zululami Road, Othobothini, Jozini 3969<br />
+                    KwaZulu-Natal, South Africa
+                  </p>
+                </div>
+              </div>
+            </div>
           </Card>
         </div>
       </div>
