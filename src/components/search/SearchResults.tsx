@@ -20,7 +20,7 @@ interface SearchResultsProps {
 
 export const SearchResults = ({ filters, searchParams }: SearchResultsProps) => {
   const [sortBy, setSortBy] = useState("price-asc");
-  const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "map">("map");
   const [page, setPage] = useState(1);
   const [rooms, setRooms] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
