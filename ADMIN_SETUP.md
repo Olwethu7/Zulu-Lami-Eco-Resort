@@ -4,7 +4,7 @@
 
 1. Navigate to the registration page at `/login` and click on "Register" tab
 2. Create a new account with the following credentials:
-   - **Email**: passiveincome1340@gmil.com
+   - **Email**: passiveincome1340@gmail.com
    - **Password**: #Admin01
    - **Full Name**: Admin User
 
@@ -21,7 +21,7 @@ Run this SQL command in your Supabase SQL Editor:
 INSERT INTO public.user_roles (user_id, role)
 SELECT id, 'admin'::app_role
 FROM auth.users
-WHERE email = 'passiveincome1340@gmil.com'
+WHERE email = 'passiveincome1340@gmail.com'
 ON CONFLICT (user_id, role) DO NOTHING;
 ```
 
