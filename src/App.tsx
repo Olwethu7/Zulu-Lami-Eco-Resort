@@ -28,6 +28,8 @@ const AdminRooms = lazy(() => import("./pages/admin/AdminRooms"));
 const AdminContent = lazy(() => import("./pages/admin/AdminContent"));
 const Payment = lazy(() => import("./pages/Payment"));
 const PaymentProof = lazy(() => import("./pages/PaymentProof"));
+const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const PaymentCancel = lazy(() => import("./pages/PaymentCancel"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Sustainability = lazy(() => import("./pages/Sustainability"));
@@ -163,6 +165,8 @@ const App = () => {
             />
             <Route path="/payment/:bookingId" element={<Payment />} />
             <Route path="/payment-proof/:bookingId" element={<PaymentProof />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-cancel" element={<PaymentCancel />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

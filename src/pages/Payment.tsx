@@ -1,224 +1,249 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Loader2, CreditCard, AlertCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, CheckCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { format, differenceInDays } from "date-fns";
 
 const Payment = () => {
   const { bookingId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [booking, setBooking] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    fetchBooking();
-  }, [bookingId]);
+    const fetchBooking = async () => {
+      if (!bookingId || !user) {
+        navigate("/login");
+        return;
+      }
 
-  const fetchBooking = async () => {
-    try {
+      setIsLoading(true);
       const { data, error } = await supabase
         .from("bookings")
-        .select("*")
+        .select(`
+          *,
+          rooms (
+            name,
+            room_type,
+            price_per_night,
+            images
+          )
+        `)
         .eq("id", bookingId)
+        .eq("user_id", user.id)
         .single();
 
-      if (error) throw error;
-      
-      if (!data.admin_approved) {
+      if (error || !data) {
         toast({
-          title: "Booking Not Approved",
-          description: "This booking has not been approved yet",
+          title: "Error",
+          description: "Booking not found",
           variant: "destructive",
         });
         navigate("/bookings");
-        return;
+      } else {
+        setBooking(data);
       }
+      setIsLoading(false);
+    };
 
-      if (data.payment_status === "paid") {
-        toast({
-          title: "Already Paid",
-          description: "This booking has already been paid",
-        });
-        navigate("/bookings");
-        return;
-      }
-
-      setBooking(data);
-    } catch (error) {
-      console.error("Error fetching booking:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load booking details",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchBooking();
+  }, [bookingId, user, navigate, toast]);
 
   const handlePayment = async () => {
-    setProcessing(true);
-    
-    try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+    if (!booking || !user) return;
 
-      // Update booking status
-      const { error } = await supabase
-        .from("bookings")
-        .update({
-          payment_status: "paid",
-          status: "confirmed",
-        })
-        .eq("id", bookingId);
+    setIsProcessing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-payment-checkout", {
+        body: { bookingId: booking.id },
+      });
 
       if (error) throw error;
 
-      toast({
-        title: "Payment Successful",
-        description: "Your booking is now confirmed!",
-      });
-
-      // Generate proof of payment
-      navigate(`/payment-proof/${bookingId}`);
-      
+      if (data?.url) {
+        // Open Stripe checkout in new tab
+        window.open(data.url, "_blank");
+        
+        toast({
+          title: "Payment Checkout Opened",
+          description: "Complete your payment in the new tab to confirm your booking.",
+        });
+      } else {
+        throw new Error("No checkout URL received");
+      }
     } catch (error) {
       console.error("Payment error:", error);
       toast({
         title: "Payment Failed",
-        description: "Please try again or contact support",
+        description: "Failed to create payment session. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setProcessing(false);
+      setIsProcessing(false);
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Layout>
-        <div className="container py-8">
-          <p>Loading payment details...</p>
+        <div className="container py-16 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       </Layout>
     );
   }
 
-  if (!booking) {
-    return (
-      <Layout>
-        <div className="container py-8">
-          <p>Booking not found</p>
-        </div>
-      </Layout>
-    );
-  }
+  if (!booking) return null;
+
+  const nights = booking.check_in_date && booking.check_out_date
+    ? differenceInDays(new Date(booking.check_out_date), new Date(booking.check_in_date))
+    : 0;
 
   return (
     <Layout>
-      <div className="container py-8 max-w-2xl">
+      <div className="container py-8 max-w-4xl">
         <h1 className="font-montserrat text-3xl font-bold text-primary mb-8">
-          Complete Your Payment
+          Complete Payment
         </h1>
 
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Booking Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Guest Name</span>
-              <span className="font-semibold">{booking.guest_name}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Check-in</span>
-              <span className="font-semibold">
-                {new Date(booking.check_in_date).toLocaleDateString()}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Check-out</span>
-              <span className="font-semibold">
-                {new Date(booking.check_out_date).toLocaleDateString()}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Number of Guests</span>
-              <span className="font-semibold">{booking.guests}</span>
-            </div>
-            <div className="border-t pt-3 flex justify-between text-lg">
-              <span className="font-bold">Total Amount</span>
-              <span className="font-bold text-primary">R{booking.total_price}</span>
-            </div>
-          </CardContent>
-        </Card>
+        {booking.payment_status === "paid" && (
+          <Alert className="mb-6">
+            <AlertDescription>
+              This booking has already been paid. No further payment is required.
+            </AlertDescription>
+          </Alert>
+        )}
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Payment Method</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="bg-muted p-4 rounded-lg">
-              <p className="text-sm text-muted-foreground mb-4">
-                This is a demo payment page. In production, integrate with a payment gateway like Stripe or PayFast.
-              </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Booking Summary */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Booking Summary</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {booking.rooms?.images?.[0] && (
+                <img
+                  src={booking.rooms.images[0]}
+                  alt={booking.rooms.name}
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+              )}
               
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Card Number</label>
-                  <input
-                    type="text"
-                    placeholder="1234 5678 9012 3456"
-                    className="w-full p-2 border rounded-lg"
-                    disabled={processing}
-                  />
+              <div>
+                <h3 className="font-semibold text-lg">{booking.rooms?.name}</h3>
+                <p className="text-sm text-muted-foreground capitalize">
+                  {booking.rooms?.room_type} Room
+                </p>
+              </div>
+
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Check-in:</span>
+                  <span className="font-medium">
+                    {booking.check_in_date && format(new Date(booking.check_in_date), "MMM dd, yyyy")}
+                  </span>
                 </div>
-                
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Expiry Date</label>
-                    <input
-                      type="text"
-                      placeholder="MM/YY"
-                      className="w-full p-2 border rounded-lg"
-                      disabled={processing}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">CVV</label>
-                    <input
-                      type="text"
-                      placeholder="123"
-                      className="w-full p-2 border rounded-lg"
-                      disabled={processing}
-                    />
-                  </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Check-out:</span>
+                  <span className="font-medium">
+                    {booking.check_out_date && format(new Date(booking.check_out_date), "MMM dd, yyyy")}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Guests:</span>
+                  <span className="font-medium">{booking.guests}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Nights:</span>
+                  <span className="font-medium">{nights}</span>
                 </div>
               </div>
-            </div>
 
-            <Button
-              onClick={handlePayment}
-              disabled={processing}
-              className="w-full"
-              size="lg"
-            >
-              {processing ? (
-                <>Processing...</>
-              ) : (
-                <>
-                  <CreditCard className="mr-2 h-5 w-5" />
-                  Pay R{booking.total_price}
-                </>
-              )}
-            </Button>
-          </CardContent>
-        </Card>
+              <div className="border-t pt-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    R{booking.rooms?.price_per_night} × {nights} nights
+                  </span>
+                  <span>R{(booking.rooms?.price_per_night * nights).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Service fee (10%)</span>
+                  <span>R{(booking.rooms?.price_per_night * nights * 0.1).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between font-bold text-lg pt-2 border-t">
+                  <span>Total</span>
+                  <span className="text-primary">R{Number(booking.total_price).toFixed(2)}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Payment Action */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment Method</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-3 p-4 border rounded-lg">
+                <CreditCard className="w-8 h-8 text-primary" />
+                <div>
+                  <p className="font-semibold">Secure Card Payment</p>
+                  <p className="text-sm text-muted-foreground">
+                    Powered by Stripe
+                  </p>
+                </div>
+              </div>
+
+              <div className="text-sm text-muted-foreground space-y-2">
+                <p>✓ Secure payment processing</p>
+                <p>✓ All major credit cards accepted</p>
+                <p>✓ Instant booking confirmation</p>
+                <p>✓ Protected transaction</p>
+              </div>
+
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription className="text-xs">
+                  Payment is required to confirm your booking. Your reservation will be held for 24 hours.
+                </AlertDescription>
+              </Alert>
+
+              <Button
+                size="lg"
+                className="w-full"
+                onClick={handlePayment}
+                disabled={isProcessing || booking.payment_status === "paid"}
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Opening Payment...
+                  </>
+                ) : booking.payment_status === "paid" ? (
+                  "Already Paid"
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Pay R{Number(booking.total_price).toFixed(2)}
+                  </>
+                )}
+              </Button>
+
+              <p className="text-xs text-center text-muted-foreground">
+                By clicking "Pay", you agree to the booking terms and conditions
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </Layout>
   );

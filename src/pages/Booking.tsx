@@ -163,9 +163,9 @@ const Booking = () => {
         description: `Booking reference: ${bookingRef}. Your booking is pending admin approval.`,
       });
 
-      // Navigate to bookings page
+      // Navigate to payment page after successful booking
       setTimeout(() => {
-        navigate("/bookings");
+        navigate(`/payment/${bookingData.id}`);
       }, 2000);
     } catch (error) {
       console.error("Booking error:", error);
