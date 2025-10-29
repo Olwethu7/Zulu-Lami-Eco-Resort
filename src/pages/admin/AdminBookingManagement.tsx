@@ -166,26 +166,39 @@ const AdminBookingManagement = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen w-full bg-background">
         <AdminSidebar />
         <main className="flex-1 p-8">
-          <p>Loading bookings...</p>
+          <div className="border-b pb-4 mb-6">
+            <h1 className="font-montserrat text-3xl font-bold text-primary">
+              Admin Booking Management
+            </h1>
+          </div>
+          <p className="text-muted-foreground">Loading bookings...</p>
         </main>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen w-full bg-background">
       <AdminSidebar />
       <main className="flex-1 p-8 space-y-6">
-        <div>
-          <h1 className="font-montserrat text-3xl font-bold text-primary mb-2">
-            Booking Management
-          </h1>
-          <p className="text-muted-foreground">
-            Review and manage all booking requests
-          </p>
+        <div className="border-b pb-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-montserrat text-3xl font-bold text-primary mb-2">
+                Admin Booking Management
+              </h1>
+              <p className="text-muted-foreground">
+                Review and manage all guest booking requests
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm font-semibold text-primary">Administrator Panel</p>
+              <p className="text-xs text-muted-foreground">Zulu Lami Eco-Resort</p>
+            </div>
+          </div>
         </div>
 
         <div className="grid gap-4">

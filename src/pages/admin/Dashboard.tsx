@@ -1,66 +1,15 @@
-import { AdminSidebar } from "@/components/layout/AdminSidebar";
-import { DashboardStats } from "@/components/admin/DashboardStats";
-import { RecentBookings } from "@/components/admin/RecentBookings";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
-  return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-      <main className="flex-1 p-8 space-y-8">
-        <div>
-          <h1 className="font-montserrat text-3xl font-bold text-primary mb-2">
-            Dashboard
-          </h1>
-          <p className="text-muted-foreground">
-            Welcome back! Here's your resort overview.
-          </p>
-        </div>
+  const navigate = useNavigate();
 
-        <DashboardStats />
+  useEffect(() => {
+    // Redirect to booking management
+    navigate("/admin/booking-management", { replace: true });
+  }, [navigate]);
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <RecentBookings />
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Link
-                to="/admin/bookings"
-                className="block p-4 rounded-lg border hover:bg-muted/50 transition-colors"
-              >
-                <p className="font-semibold">Manage Bookings</p>
-                <p className="text-sm text-muted-foreground">
-                  View and update reservations
-                </p>
-              </Link>
-              <Link
-                to="/admin/rooms"
-                className="block p-4 rounded-lg border hover:bg-muted/50 transition-colors"
-              >
-                <p className="font-semibold">Manage Accommodations</p>
-                <p className="text-sm text-muted-foreground">
-                  Update inventory and pricing
-                </p>
-              </Link>
-              <Link
-                to="/admin/content"
-                className="block p-4 rounded-lg border hover:bg-muted/50 transition-colors"
-              >
-                <p className="font-semibold">Content Management</p>
-                <p className="text-sm text-muted-foreground">
-                  Upload photos and manage listings
-                </p>
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
-  );
+  return null;
 };
 
 export default AdminDashboard;
