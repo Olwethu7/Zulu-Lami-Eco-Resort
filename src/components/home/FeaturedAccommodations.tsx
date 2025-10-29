@@ -10,19 +10,56 @@ import {
 } from "@/components/ui/carousel";
 
 export const FeaturedAccommodations = () => {
-  const { data: accommodations, isLoading } = useAccommodations();
-  
-  const featured = accommodations?.filter(acc => acc.type !== 'Event Space').slice(0, 3);
-
-  if (isLoading) {
-    return (
-      <section className="py-16 bg-muted/30">
-        <div className="container px-4 flex items-center justify-center min-h-[400px]">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
-      </section>
-    );
-  }
+  const featuredRooms = [
+    {
+      id: 'single-featured',
+      name: 'Single Room',
+      type: 'Single',
+      description: 'Cozy eco-friendly room for solo travelers',
+      price_per_night: 750,
+      images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop'],
+      amenities: ['Wi-Fi', 'En-suite Bathroom', 'Solar Power', 'Garden View'],
+      sustainability_rating: 4.5,
+      available: true,
+      capacity: 1
+    },
+    {
+      id: 'double-featured',
+      name: 'Double Room',
+      type: 'Double',
+      description: 'Spacious room for couples with sustainable features',
+      price_per_night: 1200,
+      images: ['https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop'],
+      amenities: ['Wi-Fi', 'En-suite Bathroom', 'King Bed', 'Solar Power', 'Private Balcony'],
+      sustainability_rating: 4.5,
+      available: true,
+      capacity: 2
+    },
+    {
+      id: 'family-featured',
+      name: 'Family Room',
+      type: 'Family',
+      description: 'Spacious family accommodation with multiple beds',
+      price_per_night: 2400,
+      images: ['https://images.unsplash.com/photo-1539185441755-769473a23570?w=800&h=600&fit=crop'],
+      amenities: ['Wi-Fi', 'En-suite Bathroom', '2 Bedrooms', 'Living Area', 'Kitchenette', 'Garden Access'],
+      sustainability_rating: 4.5,
+      available: true,
+      capacity: 4
+    },
+    {
+      id: 'event-featured',
+      name: 'Event Space',
+      type: 'Event Space',
+      description: 'Perfect for weddings, conferences, and special events',
+      price_per_night: 2000,
+      images: ['https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&h=600&fit=crop'],
+      amenities: ['Wi-Fi', 'Sound System', 'Projector', 'Catering Kitchen', 'Outdoor Area', 'Parking'],
+      sustainability_rating: 4.5,
+      available: true,
+      capacity: 50
+    }
+  ];
 
   return (
     <section className="py-16 bg-muted/30">
@@ -44,7 +81,7 @@ export const FeaturedAccommodations = () => {
           className="w-full"
         >
           <CarouselContent>
-            {featured?.map((accommodation) => (
+            {featuredRooms.map((accommodation) => (
               <CarouselItem key={accommodation.id} className="md:basis-1/2 lg:basis-1/3">
                 <AccommodationCard accommodation={accommodation} />
               </CarouselItem>
