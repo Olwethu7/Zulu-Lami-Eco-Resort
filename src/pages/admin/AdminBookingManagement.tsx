@@ -90,7 +90,7 @@ const AdminBookingManagement = () => {
 
       // Send approval email with payment link
       await supabase.functions.invoke("send-booking-approval", {
-        body: { bookingId },
+        body: { bookingId, action: "approve" },
       });
 
       toast({
@@ -123,9 +123,14 @@ const AdminBookingManagement = () => {
 
       if (error) throw error;
 
+      // Send decline email to guest
+      await supabase.functions.invoke("send-booking-approval", {
+        body: { bookingId, action: "decline" },
+      });
+
       toast({
         title: "Booking Declined",
-        description: "Guest will be notified",
+        description: "Decline email sent to guest",
       });
       
       setSelectedBooking(null);
