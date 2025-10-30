@@ -1,27 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Clock, Users } from "lucide-react";
+import { allExperiences } from "@/data/experiencesData";
+import { useMemo } from "react";
 
 export const CulturalExperiences = () => {
   const navigate = useNavigate();
   
-  const { data: experiences, isLoading } = useQuery({
-    queryKey: ["preview-experiences"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("experiences")
-        .select("*")
-        .eq("available", true)
-        .limit(3);
-      
-      if (error) throw error;
-      return data;
-    },
-  });
+  // Filter for culturally relevant experiences and food
+  const featuredExperiences = useMemo(() => {
+    return allExperiences.filter(exp => 
+      exp.id === "cultural-3" || // Cultural Village Tour
+      exp.id === "meal-1" ||     // Traditional Zulu Feast
+      exp.id === "meal-3"        // Braai Experience
+    );
+  }, []);
 
   return (
     <section className="py-16">
@@ -35,48 +29,42 @@ export const CulturalExperiences = () => {
           </p>
         </div>
 
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[...Array(3)].map((_, i) => (
-              <Skeleton key={i} className="h-64 rounded-lg" />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {experiences?.map((experience) => (
-              <Card key={experience.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div 
-                  className="h-40 bg-cover bg-center"
-                  style={{ 
-                    backgroundImage: `url(${experience.images?.[0] || 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2070'})` 
-                  }}
-                />
-                <CardContent className="p-4">
-                  <h3 className="font-montserrat font-semibold text-lg mb-2">
-                    {experience.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                    {experience.description}
-                  </p>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{experience.duration}h</span>
-                    </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {featuredExperiences.map((experience) => (
+            <Card key={experience.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <div 
+                className="h-40 bg-cover bg-center"
+                style={{ 
+                  backgroundImage: `url(${experience.image})` 
+                }}
+              />
+              <CardContent className="p-4">
+                <h3 className="font-montserrat font-semibold text-lg mb-2">
+                  {experience.title}
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                  {experience.description}
+                </p>
+                <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    <span>{experience.duration}</span>
+                  </div>
+                  {experience.maxParticipants && (
                     <div className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
-                      <span>Max {experience.max_participants}</span>
+                      <span>Max {experience.maxParticipants}</span>
                     </div>
-                  </div>
-                  <div className="font-semibold text-primary">
-                    R{experience.price}
-                    <span className="text-sm font-normal text-muted-foreground">/person</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+                  )}
+                </div>
+                <div className="font-semibold text-primary">
+                  R{experience.price}
+                  <span className="text-sm font-normal text-muted-foreground">/person</span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
         <div className="text-center mt-8">
           <Button size="lg" onClick={() => navigate("/experiences")}>
