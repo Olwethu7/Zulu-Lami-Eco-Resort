@@ -89,12 +89,12 @@ export const GuestInfoForm = ({ form }: GuestInfoFormProps) => {
           name="idNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ID Number *</FormLabel>
+              <FormLabel>ID Number (Optional)</FormLabel>
               <FormControl>
                 <Input placeholder="ID or Passport Number" {...field} />
               </FormControl>
               <FormDescription>
-                Required for check-in verification
+                Can be provided at check-in if not available now
               </FormDescription>
               <FormMessage />
             </FormItem>

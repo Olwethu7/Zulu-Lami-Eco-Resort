@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Users } from 'lucide-react';
+import { Users, Home } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
 interface Room {
   id: string;
@@ -16,6 +17,19 @@ interface Room {
   amenities: string[];
   images: string[];
   available: boolean;
+  quantity: number;
+}
+
+interface RoomGroup {
+  type: 'single' | 'double' | 'family' | 'event';
+  name: string;
+  price: number;
+  capacity: number;
+  description: string;
+  amenities: string[];
+  image: string;
+  totalAvailable: number;
+  rooms: Room[];
 }
 
 const Search: React.FC = () => {
@@ -57,24 +71,53 @@ const Search: React.FC = () => {
         description: room.description || '',
         amenities: room.amenities || [],
         images: room.images || [],
-        available: room.available
+        available: room.available,
+        quantity: room.quantity
       }));
     }
   });
 
-  const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
+  // Group rooms by type
+  const roomGroups: RoomGroup[] = React.useMemo(() => {
+    const groups: { [key: string]: RoomGroup } = {};
+    
+    rooms.forEach(room => {
+      if (!groups[room.type]) {
+        groups[room.type] = {
+          type: room.type,
+          name: room.name,
+          price: room.price,
+          capacity: room.capacity,
+          description: room.description,
+          amenities: room.amenities,
+          image: room.images[0] || '/placeholder.svg',
+          totalAvailable: 0,
+          rooms: []
+        };
+      }
+      groups[room.type].totalAvailable += room.quantity;
+      groups[room.type].rooms.push(room);
+    });
+    
+    return Object.values(groups);
+  }, [rooms]);
+
+  const [filteredGroups, setFilteredGroups] = useState<RoomGroup[]>([]);
   const [roomTypeFilter, setRoomTypeFilter] = useState<'all' | 'single' | 'double' | 'family' | 'event'>('all');
 
   useEffect(() => {
     if (roomTypeFilter === 'all') {
-      setFilteredRooms(rooms);
+      setFilteredGroups(roomGroups);
     } else {
-      setFilteredRooms(rooms.filter(room => room.type === roomTypeFilter));
+      setFilteredGroups(roomGroups.filter(group => group.type === roomTypeFilter));
     }
-  }, [roomTypeFilter, rooms]);
+  }, [roomTypeFilter, roomGroups]);
 
-  const handleBookNow = (room: Room) => {
-    setSelectedRoom(room);
+  const handleBookNow = (group: RoomGroup) => {
+    // Use the first room in the group for booking
+    if (group.rooms.length > 0) {
+      setSelectedRoom(group.rooms[0]);
+    }
   };
 
   const handleConfirmBooking = async () => {
@@ -83,8 +126,8 @@ const Search: React.FC = () => {
       return;
     }
 
-    if (!guestDetails.name || !guestDetails.email || !guestDetails.phone || !guestDetails.idNumber) {
-      alert('Please fill in all guest details');
+    if (!guestDetails.name || !guestDetails.email || !guestDetails.phone) {
+      alert('Please fill in all required guest details');
       return;
     }
 
@@ -112,7 +155,7 @@ const Search: React.FC = () => {
         guest_name: guestDetails.name,
         guest_email: guestDetails.email,
         guest_phone: guestDetails.phone,
-        guest_id_number: guestDetails.idNumber,
+        guest_id_number: guestDetails.idNumber || null,
         special_requests: guestDetails.specialRequests || null,
         status: 'pending' as const,
         payment_status: 'pending',
@@ -137,46 +180,53 @@ const Search: React.FC = () => {
     }
   };
 
-  const RoomCard: React.FC<{ room: Room }> = ({ room }) => (
+  const RoomGroupCard: React.FC<{ group: RoomGroup }> = ({ group }) => (
     <div className="bg-card rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <img
-        src={room.images[0]}
-        alt={room.name}
-        className="w-full h-48 object-cover"
-      />
+      <div className="relative">
+        <img
+          src={group.image}
+          alt={group.name}
+          className="w-full h-48 object-cover"
+        />
+        <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">
+          <Home className="w-3 h-3 mr-1" />
+          {group.totalAvailable} Available
+        </Badge>
+      </div>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-bold text-lg text-primary">{room.name}</h3>
+          <h3 className="font-bold text-lg text-primary">{group.name}</h3>
           <div className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm font-semibold">
-            R{room.price}/night
+            R{group.price}/night
           </div>
         </div>
         
-        <p className="text-muted-foreground text-sm mb-3">{room.description}</p>
+        <p className="text-muted-foreground text-sm mb-3">{group.description}</p>
         
         <div className="flex items-center text-muted-foreground text-sm mb-2">
           <Users size={14} className="mr-1" />
-          <span>Sleeps {room.capacity} {room.capacity === 1 ? 'person' : 'people'}</span>
+          <span>Sleeps {group.capacity} {group.capacity === 1 ? 'person' : 'people'}</span>
         </div>
         
         <div className="flex flex-wrap gap-1 mb-3">
-          {room.amenities.slice(0, 3).map((amenity, index) => (
+          {group.amenities.slice(0, 3).map((amenity, index) => (
             <span key={index} className="bg-muted text-muted-foreground px-2 py-1 rounded text-xs">
               {amenity}
             </span>
           ))}
-          {room.amenities.length > 3 && (
+          {group.amenities.length > 3 && (
             <span className="bg-muted text-muted-foreground px-2 py-1 rounded text-xs">
-              +{room.amenities.length - 3} more
+              +{group.amenities.length - 3} more
             </span>
           )}
         </div>
 
         <button
-          onClick={() => handleBookNow(room)}
-          className="w-full bg-secondary text-secondary-foreground py-2 rounded-lg font-semibold hover:bg-secondary/90 transition-colors"
+          onClick={() => handleBookNow(group)}
+          disabled={group.totalAvailable === 0}
+          className="w-full bg-secondary text-secondary-foreground py-2 rounded-lg font-semibold hover:bg-secondary/90 transition-colors disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
         >
-          Book Now
+          {group.totalAvailable > 0 ? 'Book Now' : 'Sold Out'}
         </button>
       </div>
     </div>
@@ -289,14 +339,13 @@ const Search: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-1">ID/Passport Number *</label>
+                    <label className="block text-sm font-medium text-foreground mb-1">ID/Passport Number (Optional)</label>
                     <input
                       type="text"
                       value={guestDetails.idNumber}
                       onChange={(e) => setGuestDetails({...guestDetails, idNumber: e.target.value})}
                       className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
                       placeholder="ID or Passport Number"
-                      required
                     />
                   </div>
 
@@ -330,7 +379,7 @@ const Search: React.FC = () => {
 
               <button
                 onClick={handleConfirmBooking}
-                disabled={!bookingDates.checkIn || !bookingDates.checkOut || !guestDetails.name || !guestDetails.email || !guestDetails.phone || !guestDetails.idNumber}
+                disabled={!bookingDates.checkIn || !bookingDates.checkOut || !guestDetails.name || !guestDetails.email || !guestDetails.phone}
                 className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
               >
                 Submit Booking Request
@@ -408,15 +457,15 @@ const Search: React.FC = () => {
         {/* Results Count */}
         <div className="text-center mb-6">
           <p className="text-muted-foreground">
-            {filteredRooms.length} {filteredRooms.length === 1 ? 'property' : 'properties'} found
+            {filteredGroups.length} room {filteredGroups.length === 1 ? 'type' : 'types'} found
           </p>
         </div>
 
-        {/* Rooms Grid */}
+        {/* Room Groups Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {isLoading ? (
             // Loading skeletons
-            Array.from({ length: 8 }).map((_, i) => (
+            Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="bg-card rounded-lg shadow-md overflow-hidden">
                 <Skeleton className="w-full h-48" />
                 <div className="p-4 space-y-3">
@@ -427,7 +476,7 @@ const Search: React.FC = () => {
                 </div>
               </div>
             ))
-          ) : filteredRooms.length === 0 ? (
+          ) : filteredGroups.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <div className="text-muted-foreground text-6xl mb-4">🏠</div>
               <h3 className="text-xl font-semibold text-foreground mb-2">
@@ -438,8 +487,8 @@ const Search: React.FC = () => {
               </p>
             </div>
           ) : (
-            filteredRooms.map((room) => (
-              <RoomCard key={room.id} room={room} />
+            filteredGroups.map(group => (
+              <RoomGroupCard key={group.type} group={group} />
             ))
           )}
         </div>

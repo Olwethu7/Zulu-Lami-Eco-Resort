@@ -23,7 +23,7 @@ const bookingSchema = z.object({
   lastName: z.string().min(1, "Last name is required").max(50),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  idNumber: z.string().min(5, "ID number is required").max(20),
+  idNumber: z.string().max(20).optional(),
   specialRequests: z.string().max(500).optional(),
 });
 
