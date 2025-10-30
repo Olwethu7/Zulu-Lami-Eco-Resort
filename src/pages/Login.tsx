@@ -34,7 +34,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, user, isAdmin, isLoading } = useAuth();
+  const { signIn, signUp, user, isLoading } = useAuth();
   const { toast } = useToast();
 
   const loginForm = useForm<LoginFormValues>({
@@ -43,20 +43,13 @@ const Login = () => {
 
   const registerForm = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
-    defaultValues: {
-      role: "user",
-    },
   });
 
   useEffect(() => {
     if (user && !isLoading) {
-      if (isAdmin) {
-        navigate("/admin/dashboard", { replace: true });
-      } else {
-        navigate("/dashboard", { replace: true });
-      }
+      navigate("/", { replace: true });
     }
-  }, [user, isAdmin, isLoading, navigate]);
+  }, [user, isLoading, navigate]);
 
   const onLogin = async (values: LoginFormValues) => {
     const { error } = await signIn(values.email, values.password);
@@ -77,7 +70,7 @@ const Login = () => {
   };
 
   const onRegister = async (values: RegisterFormValues) => {
-    const { error } = await signUp(values.email, values.password, values.fullName, values.role);
+    const { error } = await signUp(values.email, values.password, values.fullName);
     
     if (error) {
       if (error.message.includes("already registered")) {
@@ -233,22 +226,6 @@ const Login = () => {
                     {registerForm.formState.errors.confirmPassword && (
                       <p className="text-sm text-destructive">
                         {registerForm.formState.errors.confirmPassword.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="register-role">Account Type</Label>
-                    <select
-                      id="register-role"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      {...registerForm.register("role")}
-                    >
-                      <option value="user">User Account</option>
-                      <option value="admin">Admin Account</option>
-                    </select>
-                    {registerForm.formState.errors.role && (
-                      <p className="text-sm text-destructive">
-                        {registerForm.formState.errors.role.message}
                       </p>
                     )}
                   </div>

@@ -177,9 +177,8 @@ const Search: React.FC = () => {
         guest_email: guestDetails.email,
         guest_phone: guestDetails.phone,
         special_requests: guestDetails.specialRequests || null,
-        status: 'pending' as const,
-        payment_status: 'pending',
-        admin_approved: false
+        status: 'confirmed' as const,
+        payment_status: 'pending'
       };
 
       const { error } = await supabase
@@ -188,7 +187,7 @@ const Search: React.FC = () => {
 
       if (error) throw error;
 
-      alert('Booking request submitted! Awaiting admin approval.');
+      alert('Booking confirmed! A notification has been sent to the resort. You will receive payment details via email shortly.');
       setSelectedRoom(null);
       setBookingDates({ checkIn: '', checkOut: '', guests: 1 });
       setGuestDetails({ name: '', email: '', phone: '', specialRequests: '' });
@@ -208,10 +207,6 @@ const Search: React.FC = () => {
           alt={group.name}
           className="w-full h-48 object-cover"
         />
-        <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">
-          <Home className="w-3 h-3 mr-1" />
-          {group.totalAvailable} Available
-        </Badge>
       </div>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
@@ -243,10 +238,9 @@ const Search: React.FC = () => {
 
         <button
           onClick={() => handleBookNow(group)}
-          disabled={group.totalAvailable === 0}
-          className="w-full bg-secondary text-secondary-foreground py-2 rounded-lg font-semibold hover:bg-secondary/90 transition-colors disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
+          className="w-full bg-secondary text-secondary-foreground py-2 rounded-lg font-semibold hover:bg-secondary/90 transition-colors"
         >
-          {group.totalAvailable > 0 ? 'Book Now' : 'Sold Out'}
+          Book Now
         </button>
       </div>
     </div>
@@ -382,7 +376,7 @@ const Search: React.FC = () => {
                     <span>Total:</span>
                     <span>R{calculateTotal()}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">Payment link will be sent after admin approval</p>
+                  <p className="text-xs text-muted-foreground mt-2">Payment instructions will be sent via email</p>
                 </div>
               )}
 
@@ -391,7 +385,7 @@ const Search: React.FC = () => {
                 disabled={!bookingDates.checkIn || !bookingDates.checkOut || !guestDetails.name || !guestDetails.email || !guestDetails.phone}
                 className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
               >
-                Submit Booking Request
+                Confirm Booking
               </button>
             </div>
           </div>

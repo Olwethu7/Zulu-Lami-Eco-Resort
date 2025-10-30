@@ -5,22 +5,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requireAdmin?: boolean;
 }
 
-export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
-  const { user, isLoading, isAdmin } = useAuth();
+export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading) {
-      if (!user) {
-        navigate("/login", { replace: true });
-      } else if (requireAdmin && !isAdmin) {
-        navigate("/", { replace: true });
-      }
+    if (!isLoading && !user) {
+      navigate("/login", { replace: true });
     }
-  }, [user, isLoading, isAdmin, requireAdmin, navigate]);
+  }, [user, isLoading, navigate]);
 
   if (isLoading) {
     return (
@@ -35,10 +30,6 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
   }
 
   if (!user) {
-    return null;
-  }
-
-  if (requireAdmin && !isAdmin) {
     return null;
   }
 

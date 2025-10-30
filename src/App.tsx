@@ -23,11 +23,6 @@ const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AccommodationDetail = lazy(() => import("./pages/AccommodationDetail"));
 const Booking = lazy(() => import("./pages/Booking"));
-const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
-const AdminBookings = lazy(() => import("./pages/admin/AdminBookings"));
-const AdminBookingManagement = lazy(() => import("./pages/admin/AdminBookingManagement"));
-const AdminRooms = lazy(() => import("./pages/admin/AdminRooms"));
-const AdminContent = lazy(() => import("./pages/admin/AdminContent"));
 const Payment = lazy(() => import("./pages/Payment"));
 const PaymentProof = lazy(() => import("./pages/PaymentProof"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
@@ -118,55 +113,6 @@ const App = () => {
               }
             />
             
-            {/* Admin Routes */}
-            <Route
-              path="/admin/dashboard"
-              element={
-                <ProtectedRoute requireAdmin>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute requireAdmin>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/bookings"
-              element={
-                <ProtectedRoute requireAdmin>
-                  <AdminBookings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/booking-management"
-              element={
-                <ProtectedRoute requireAdmin>
-                  <AdminBookingManagement />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/rooms"
-              element={
-                <ProtectedRoute requireAdmin>
-                  <AdminRooms />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/content"
-              element={
-                <ProtectedRoute requireAdmin>
-                  <AdminContent />
-                </ProtectedRoute>
-              }
-            />
             <Route path="/payment/:bookingId" element={<Payment />} />
             <Route path="/payment-proof/:bookingId" element={<PaymentProof />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />

@@ -126,10 +126,6 @@ export const FeaturedAccommodations = () => {
           alt={group.name}
           className="w-full h-48 object-cover"
         />
-        <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">
-          <Home className="w-3 h-3 mr-1" />
-          {group.totalAvailable} Available
-        </Badge>
       </div>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
@@ -161,10 +157,9 @@ export const FeaturedAccommodations = () => {
 
         <button
           onClick={() => navigate('/search')}
-          disabled={group.totalAvailable === 0}
-          className="w-full bg-secondary text-secondary-foreground py-2 rounded-lg font-semibold hover:bg-secondary/90 transition-colors disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
+          className="w-full bg-secondary text-secondary-foreground py-2 rounded-lg font-semibold hover:bg-secondary/90 transition-colors"
         >
-          {group.totalAvailable > 0 ? 'Book Now' : 'Sold Out'}
+          Book Now
         </button>
       </div>
     </div>
