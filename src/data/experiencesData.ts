@@ -106,7 +106,7 @@ export const activitiesData: ExperienceItem[] = [
       "Refreshments and snacks",
       "Game viewing photography tips"
     ],
-    image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80",
+    image: "/src/assets/experiences/zebra.jpg",
     category: "activities",
     subcategory: "Nature & Adventure Activities"
   },
@@ -163,7 +163,7 @@ export const activitiesData: ExperienceItem[] = [
       "Soft drinks and snacks",
       "Sunset viewing (evening tours)"
     ],
-    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
+    image: "/src/assets/experiences/kayaking.jpg",
     category: "activities",
     subcategory: "Nature & Adventure Activities"
   },
@@ -182,7 +182,7 @@ export const activitiesData: ExperienceItem[] = [
       "Morning refreshments",
       "Species checklist"
     ],
-    image: "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=800&q=80",
+    image: "/src/assets/experiences/birds.jpg",
     category: "activities",
     subcategory: "Nature & Adventure Activities"
   },
@@ -201,7 +201,7 @@ export const activitiesData: ExperienceItem[] = [
       "Lifeguard on duty",
       "Poolside service available"
     ],
-    image: "https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=800&q=80",
+    image: "/src/assets/experiences/pool.jpg",
     category: "activities",
     subcategory: "Relaxation & Resort Activities"
   },
@@ -259,7 +259,7 @@ export const foodData: ExperienceItem[] = [
       "Chef's welcome",
       "Recipe cards"
     ],
-    image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80",
+    image: "/src/assets/experiences/restaurant-view.jpg",
     category: "food",
     subcategory: "Meals & Main Dishes"
   },
@@ -294,64 +294,9 @@ export const foodData: ExperienceItem[] = [
       "Wood fire setup",
       "Outdoor seating"
     ],
-    image: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=800&q=80",
+    image: "/src/assets/experiences/braai-platter.jpg",
     category: "food",
     subcategory: "Meals & Main Dishes"
-  },
-  // Special Events & Packages
-  {
-    id: "special-1",
-    title: "New Year's Eve Celebration",
-    price: "150 (Adult) / 70 (Child)",
-    duration: "Evening",
-    location: "Main Venue",
-    description: "Ring in the New Year with a spectacular celebration featuring gourmet dining, live entertainment, and midnight festivities.",
-    included: [
-      "Gourmet buffet dinner",
-      "Live entertainment",
-      "Midnight champagne toast",
-      "DJ and dancing",
-      "Party favors"
-    ],
-    image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=800&q=80",
-    category: "food",
-    subcategory: "Special Events & Packages"
-  },
-  {
-    id: "special-2",
-    title: "Romantic Bush Dinner",
-    price: "450 per couple",
-    duration: "3 hours",
-    location: "Private Bush Setting",
-    description: "An intimate dining experience under the stars in a secluded bush setting, perfect for couples seeking romance and adventure.",
-    included: [
-      "Private chef-prepared meal",
-      "Candlelit table setup",
-      "Personal waiter service",
-      "Champagne and wine pairing",
-      "Transport to location"
-    ],
-    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
-    category: "food",
-    subcategory: "Special Events & Packages"
-  },
-  {
-    id: "special-3",
-    title: "Boma Dinner Experience",
-    price: "350 per person",
-    duration: "2.5 hours",
-    location: "Traditional Boma",
-    description: "Dine around an open fire in a traditional African boma, enjoying authentic cuisine and cultural entertainment.",
-    included: [
-      "Traditional boma setting",
-      "Multi-course African meal",
-      "Live cultural performance",
-      "Storytelling session",
-      "Traditional beverages"
-    ],
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
-    category: "food",
-    subcategory: "Special Events & Packages"
   },
   // Beverages & Drinks
   {
@@ -367,7 +312,7 @@ export const foodData: ExperienceItem[] = [
       "Beautiful presentation",
       "Various flavors available"
     ],
-    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80",
+    image: "/src/assets/experiences/bar-setup.jpg",
     category: "food",
     subcategory: "Beverages & Drinks"
   },
@@ -470,24 +415,7 @@ export const foodData: ExperienceItem[] = [
       "Toast and butter",
       "Coffee or tea"
     ],
-    image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80",
-    category: "food",
-    subcategory: "Breakfast & Light Meals"
-  },
-  {
-    id: "breakfast-3",
-    title: "Picnic Baskets",
-    price: 150,
-    location: "To Go",
-    description: "Curated picnic basket perfect for outdoor adventures, packed with delicious treats.",
-    included: [
-      "Gourmet sandwiches",
-      "Fresh fruits and snacks",
-      "Cheese and crackers",
-      "Beverages",
-      "Picnic blanket provided"
-    ],
-    image: "https://images.unsplash.com/photo-1523353621737-de11fda2e6e1?w=800&q=80",
+    image: "/src/assets/experiences/breakfast-plate.jpg",
     category: "food",
     subcategory: "Breakfast & Light Meals"
   },
