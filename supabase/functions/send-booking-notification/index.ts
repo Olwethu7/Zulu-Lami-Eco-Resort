@@ -40,8 +40,8 @@ serve(async (req) => {
     const roomName = room?.name || "Room";
     const roomType = room?.room_type || "N/A";
 
-    // Admin email - using environment variable
-    const adminEmail = Deno.env.get("ADMIN_EMAIL") || "info@zululami.com";
+    // Admin email - hardcoded for testing
+    const adminEmail = "developmentteam86@gmail.com";
     
     // Format booking reference
     const bookingRef = booking.id.substring(0, 8).toUpperCase();

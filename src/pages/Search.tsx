@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Users, Home } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
@@ -32,16 +32,186 @@ interface RoomGroup {
   rooms: Room[];
 }
 
+interface BookingDatesState {
+  checkIn: string;
+  checkOut: string;
+  guests: number;
+}
+
+interface GuestDetailsState {
+  name: string;
+  email: string;
+  phone: string;
+  specialRequests: string;
+}
+
+// BookingModal moved outside component to prevent re-renders
+const BookingModal: React.FC<{
+  room: Room;
+  onClose: () => void;
+  bookingDates: BookingDatesState;
+  setBookingDates: (dates: BookingDatesState) => void;
+  guestDetails: GuestDetailsState;
+  setGuestDetails: (details: GuestDetailsState) => void;
+  onConfirm: () => void;
+}> = ({ room, onClose, bookingDates, setBookingDates, guestDetails, setGuestDetails, onConfirm }) => {
+  const calculateTotal = () => {
+    if (!bookingDates.checkIn || !bookingDates.checkOut) return 0;
+    const checkIn = new Date(bookingDates.checkIn);
+    const checkOut = new Date(bookingDates.checkOut);
+    const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+    return room.price * nights;
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-card rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-primary">Book {room.name}</h2>
+            <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-2xl">
+              ×
+            </button>
+          </div>
+
+          <img src={room.images[0]} alt={room.name} className="w-full h-48 object-cover rounded-lg mb-6" />
+
+          <div className="space-y-4">
+            {/* Booking Dates */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">Check-in Date *</label>
+                <input
+                  type="date"
+                  value={bookingDates.checkIn}
+                  onChange={(e) => setBookingDates({...bookingDates, checkIn: e.target.value})}
+                  className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                  min={new Date().toISOString().split('T')[0]}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">Check-out Date *</label>
+                <input
+                  type="date"
+                  value={bookingDates.checkOut}
+                  onChange={(e) => setBookingDates({...bookingDates, checkOut: e.target.value})}
+                  className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                  min={bookingDates.checkIn || new Date().toISOString().split('T')[0]}
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">Number of Guests *</label>
+              <select
+                value={bookingDates.guests}
+                onChange={(e) => setBookingDates({...bookingDates, guests: parseInt(e.target.value)})}
+                className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+              >
+                {[...Array(room.capacity)].map((_, i) => (
+                  <option key={i + 1} value={i + 1}>{i + 1} {i + 1 === 1 ? 'guest' : 'guests'}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Guest Details */}
+            <div className="border-t pt-4 mt-4">
+              <h3 className="font-semibold text-foreground mb-3">Guest Information</h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">Full Name *</label>
+                  <input
+                    type="text"
+                    value={guestDetails.name}
+                    onChange={(e) => setGuestDetails({...guestDetails, name: e.target.value})}
+                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                    placeholder="John Doe"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1">Email Address *</label>
+                    <input
+                      type="email"
+                      value={guestDetails.email}
+                      onChange={(e) => setGuestDetails({...guestDetails, email: e.target.value})}
+                      className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                      placeholder="john@example.com"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1">Phone Number *</label>
+                    <input
+                      type="tel"
+                      value={guestDetails.phone}
+                      onChange={(e) => setGuestDetails({...guestDetails, phone: e.target.value})}
+                      className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                      placeholder="+27 123 456 789"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">Special Requests (Optional)</label>
+                  <textarea
+                    value={guestDetails.specialRequests}
+                    onChange={(e) => setGuestDetails({...guestDetails, specialRequests: e.target.value})}
+                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                    rows={3}
+                    placeholder="Any dietary restrictions, accessibility needs, or special occasions..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Price Summary */}
+            {calculateTotal() > 0 && (
+              <div className="bg-muted p-4 rounded-lg border-t mt-4">
+                <div className="flex justify-between text-sm mb-2">
+                  <span>Room rate:</span>
+                  <span>R{room.price} × {Math.ceil((new Date(bookingDates.checkOut).getTime() - new Date(bookingDates.checkIn).getTime()) / (1000 * 60 * 60 * 24))} nights</span>
+                </div>
+                <div className="flex justify-between font-bold text-lg">
+                  <span>Total:</span>
+                  <span>R{calculateTotal()}</span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">Payment instructions will be sent via email</p>
+              </div>
+            )}
+
+            <button
+              onClick={onConfirm}
+              disabled={!bookingDates.checkIn || !bookingDates.checkOut || !guestDetails.name || !guestDetails.email || !guestDetails.phone}
+              className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
+            >
+              Confirm Booking
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Search: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-  const [bookingDates, setBookingDates] = useState({
+  const [bookingDates, setBookingDates] = useState<BookingDatesState>({
     checkIn: '',
     checkOut: '',
     guests: 1
   });
-  const [guestDetails, setGuestDetails] = useState({
+  const [guestDetails, setGuestDetails] = useState<GuestDetailsState>({
     name: '',
     email: '',
     phone: '',
@@ -134,14 +304,14 @@ const Search: React.FC = () => {
     }
   }, [roomTypeFilter, roomGroups]);
 
-  const handleBookNow = (group: RoomGroup) => {
+  const handleBookNow = useCallback((group: RoomGroup) => {
     // Use the first room in the group for booking
     if (group.rooms.length > 0) {
       setSelectedRoom(group.rooms[0]);
     }
-  };
+  }, []);
 
-  const handleConfirmBooking = async () => {
+  const handleConfirmBooking = useCallback(async () => {
     if (!selectedRoom || !bookingDates.checkIn || !bookingDates.checkOut) {
       alert('Please fill in all booking details');
       return;
@@ -236,7 +406,7 @@ const Search: React.FC = () => {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       alert(`Booking failed: ${errorMessage}. Please try again.`);
     }
-  };
+  }, [selectedRoom, bookingDates, guestDetails, navigate]);
 
   const RoomGroupCard: React.FC<{ group: RoomGroup }> = ({ group }) => (
     <div className="bg-card rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -285,166 +455,6 @@ const Search: React.FC = () => {
     </div>
   );
 
-  const BookingModal: React.FC<{ room: Room; onClose: () => void }> = ({ room, onClose }) => {
-    const calculateTotal = () => {
-      if (!bookingDates.checkIn || !bookingDates.checkOut) return 0;
-      const checkIn = new Date(bookingDates.checkIn);
-      const checkOut = new Date(bookingDates.checkOut);
-      const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
-      return room.price * nights;
-    };
-
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className="bg-card rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-primary">Book {room.name}</h2>
-              <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-2xl">
-                ×
-              </button>
-            </div>
-
-            <img src={room.images[0]} alt={room.name} className="w-full h-48 object-cover rounded-lg mb-6" />
-
-            <div className="space-y-4">
-              {/* Booking Dates */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Check-in Date *</label>
-                  <input
-                    type="date"
-                    value={bookingDates.checkIn}
-                    onChange={(e) => setBookingDates({...bookingDates, checkIn: e.target.value})}
-                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
-                    min={new Date().toISOString().split('T')[0]}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Check-out Date *</label>
-                  <input
-                    type="date"
-                    value={bookingDates.checkOut}
-                    onChange={(e) => setBookingDates({...bookingDates, checkOut: e.target.value})}
-                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
-                    min={bookingDates.checkIn || new Date().toISOString().split('T')[0]}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Number of Guests *</label>
-                <select
-                  value={bookingDates.guests}
-                  onChange={(e) => setBookingDates({...bookingDates, guests: parseInt(e.target.value)})}
-                  className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
-                >
-                  {[...Array(room.capacity)].map((_, i) => (
-                    <option key={i + 1} value={i + 1}>{i + 1} {i + 1 === 1 ? 'guest' : 'guests'}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Guest Details */}
-              <div className="border-t pt-4 mt-4">
-                <h3 className="font-semibold text-foreground mb-3">Guest Information</h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1">Full Name *</label>
-                    <input
-                      type="text"
-                      value={guestDetails.name}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setGuestDetails(prev => ({...prev, name: value}));
-                      }}
-                      className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
-                      placeholder="John Doe"
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-1">Email Address *</label>
-                      <input
-                        type="email"
-                        value={guestDetails.email}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setGuestDetails(prev => ({...prev, email: value}));
-                        }}
-                        className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
-                        placeholder="john@example.com"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-1">Phone Number *</label>
-                      <input
-                        type="tel"
-                        value={guestDetails.phone}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setGuestDetails(prev => ({...prev, phone: value}));
-                        }}
-                        className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
-                        placeholder="+27 123 456 789"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1">Special Requests (Optional)</label>
-                    <textarea
-                      value={guestDetails.specialRequests}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setGuestDetails(prev => ({...prev, specialRequests: value}));
-                      }}
-                      className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
-                      rows={3}
-                      placeholder="Any dietary restrictions, accessibility needs, or special occasions..."
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Price Summary */}
-              {calculateTotal() > 0 && (
-                <div className="bg-muted p-4 rounded-lg border-t mt-4">
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>Room rate:</span>
-                    <span>R{room.price} × {Math.ceil((new Date(bookingDates.checkOut).getTime() - new Date(bookingDates.checkIn).getTime()) / (1000 * 60 * 60 * 24))} nights</span>
-                  </div>
-                  <div className="flex justify-between font-bold text-lg">
-                    <span>Total:</span>
-                    <span>R{calculateTotal()}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">Payment instructions will be sent via email</p>
-                </div>
-              )}
-
-              <button
-                onClick={handleConfirmBooking}
-                disabled={!bookingDates.checkIn || !bookingDates.checkOut || !guestDetails.name || !guestDetails.email || !guestDetails.phone}
-                className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
-              >
-                Confirm Booking
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
@@ -461,7 +471,7 @@ const Search: React.FC = () => {
             className={`px-4 py-2 rounded-full font-semibold transition-colors ${
               roomTypeFilter === 'all' 
                 ? 'bg-primary text-primary-foreground' 
-                : 'bg-card text-muted-foreground hover:bg-muted'
+                : 'bg-muted text-muted-foreground hover:bg-primary/20'
             }`}
           >
             All Rooms
@@ -471,77 +481,73 @@ const Search: React.FC = () => {
             className={`px-4 py-2 rounded-full font-semibold transition-colors ${
               roomTypeFilter === 'single' 
                 ? 'bg-primary text-primary-foreground' 
-                : 'bg-card text-muted-foreground hover:bg-muted'
+                : 'bg-muted text-muted-foreground hover:bg-primary/20'
             }`}
           >
-            Single (R750)
+            Single Room
           </button>
           <button
             onClick={() => setRoomTypeFilter('double')}
             className={`px-4 py-2 rounded-full font-semibold transition-colors ${
               roomTypeFilter === 'double' 
                 ? 'bg-primary text-primary-foreground' 
-                : 'bg-card text-muted-foreground hover:bg-muted'
+                : 'bg-muted text-muted-foreground hover:bg-primary/20'
             }`}
           >
-            Double (R1200)
+            Double Room
           </button>
           <button
             onClick={() => setRoomTypeFilter('family')}
             className={`px-4 py-2 rounded-full font-semibold transition-colors ${
               roomTypeFilter === 'family' 
                 ? 'bg-primary text-primary-foreground' 
-                : 'bg-card text-muted-foreground hover:bg-muted'
+                : 'bg-muted text-muted-foreground hover:bg-primary/20'
             }`}
           >
-            Family (R2400)
+            Family Room
           </button>
           <button
             onClick={() => setRoomTypeFilter('event')}
             className={`px-4 py-2 rounded-full font-semibold transition-colors ${
               roomTypeFilter === 'event' 
                 ? 'bg-primary text-primary-foreground' 
-                : 'bg-card text-muted-foreground hover:bg-muted'
+                : 'bg-muted text-muted-foreground hover:bg-primary/20'
             }`}
           >
-            Event Space (R2000)
+            Event Venue
           </button>
         </div>
 
         {/* Results Count */}
-        <div className="text-center mb-6">
+        <div className="mb-6">
           <p className="text-muted-foreground">
-            {filteredGroups.length} room {filteredGroups.length === 1 ? 'type' : 'types'} found
+            {isLoading ? 'Loading...' : `${filteredGroups.length} room type${filteredGroups.length !== 1 ? 's' : ''} found`}
           </p>
         </div>
 
         {/* Room Groups Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {isLoading ? (
             // Loading skeletons
-            Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-card rounded-lg shadow-md overflow-hidden">
+            Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="bg-card rounded-lg shadow-md overflow-hidden">
                 <Skeleton className="w-full h-48" />
                 <div className="p-4 space-y-3">
                   <Skeleton className="h-6 w-3/4" />
                   <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
                   <Skeleton className="h-10 w-full" />
                 </div>
               </div>
             ))
           ) : filteredGroups.length === 0 ? (
             <div className="col-span-full text-center py-12">
-              <div className="text-muted-foreground text-6xl mb-4">🏠</div>
-              <h3 className="text-xl font-semibold text-foreground mb-2">
-                No rooms found
-              </h3>
-              <p className="text-muted-foreground">
-                Try selecting a different room type
-              </p>
+              <Home size={48} className="mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">No rooms found</h3>
+              <p className="text-muted-foreground">Try adjusting your filters or check back later.</p>
             </div>
           ) : (
-            filteredGroups.map(group => (
+            filteredGroups.map((group) => (
               <RoomGroupCard key={group.type} group={group} />
             ))
           )}
@@ -549,12 +555,14 @@ const Search: React.FC = () => {
 
         {/* Booking Modal */}
         {selectedRoom && (
-          <BookingModal 
-            room={selectedRoom} 
-            onClose={() => {
-              setSelectedRoom(null);
-              setBookingDates({ checkIn: '', checkOut: '', guests: 1 });
-            }} 
+          <BookingModal
+            room={selectedRoom}
+            onClose={() => setSelectedRoom(null)}
+            bookingDates={bookingDates}
+            setBookingDates={setBookingDates}
+            guestDetails={guestDetails}
+            setGuestDetails={setGuestDetails}
+            onConfirm={handleConfirmBooking}
           />
         )}
       </div>
