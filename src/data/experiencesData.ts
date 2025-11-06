@@ -1,3 +1,13 @@
+// Import local experience images
+import zebraImg from '@/assets/experiences/zebra.jpg';
+import kayakingImg from '@/assets/experiences/kayaking.jpg';
+import birdsImg from '@/assets/experiences/birds.jpg';
+import poolImg from '@/assets/experiences/pool.jpg';
+import restaurantViewImg from '@/assets/experiences/restaurant-view.jpg';
+import braaiPlatterImg from '@/assets/experiences/braai-platter.jpg';
+import barSetupImg from '@/assets/experiences/bar-setup.jpg';
+import breakfastPlateImg from '@/assets/experiences/breakfast-plate.jpg';
+
 export interface ExperienceItem {
   id: string;
   title: string;
@@ -49,7 +59,7 @@ export const activitiesData: ExperienceItem[] = [
       "Refreshments and snacks",
       "Game viewing photography tips"
     ],
-    image: "/src/assets/experiences/zebra.jpg",
+    image: zebraImg,
     category: "activities",
     subcategory: "Nature & Adventure Activities"
   },
@@ -106,7 +116,7 @@ export const activitiesData: ExperienceItem[] = [
       "Soft drinks and snacks",
       "Sunset viewing (evening tours)"
     ],
-    image: "/src/assets/experiences/kayaking.jpg",
+    image: kayakingImg,
     category: "activities",
     subcategory: "Nature & Adventure Activities"
   },
@@ -125,7 +135,7 @@ export const activitiesData: ExperienceItem[] = [
       "Morning refreshments",
       "Species checklist"
     ],
-    image: "/src/assets/experiences/birds.jpg",
+    image: birdsImg,
     category: "activities",
     subcategory: "Nature & Adventure Activities"
   },
@@ -144,7 +154,7 @@ export const activitiesData: ExperienceItem[] = [
       "Lifeguard on duty",
       "Poolside service available"
     ],
-    image: "/src/assets/experiences/pool.jpg",
+    image: poolImg,
     category: "activities",
     subcategory: "Relaxation & Resort Activities"
   },
@@ -202,7 +212,7 @@ export const foodData: ExperienceItem[] = [
       "Chef's welcome",
       "Recipe cards"
     ],
-    image: "/src/assets/experiences/restaurant-view.jpg",
+    image: restaurantViewImg,
     category: "food",
     subcategory: "Meals & Main Dishes"
   },
@@ -237,7 +247,7 @@ export const foodData: ExperienceItem[] = [
       "Wood fire setup",
       "Outdoor seating"
     ],
-    image: "/src/assets/experiences/braai-platter.jpg",
+    image: braaiPlatterImg,
     category: "food",
     subcategory: "Meals & Main Dishes"
   },
@@ -255,7 +265,7 @@ export const foodData: ExperienceItem[] = [
       "Beautiful presentation",
       "Various flavors available"
     ],
-    image: "/src/assets/experiences/bar-setup.jpg",
+    image: barSetupImg,
     category: "food",
     subcategory: "Beverages & Drinks"
   },
@@ -358,7 +368,7 @@ export const foodData: ExperienceItem[] = [
       "Toast and butter",
       "Coffee or tea"
     ],
-    image: "/src/assets/experiences/breakfast-plate.jpg",
+    image: breakfastPlateImg,
     category: "food",
     subcategory: "Breakfast & Light Meals"
   },
