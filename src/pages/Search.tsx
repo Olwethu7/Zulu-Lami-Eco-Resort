@@ -395,22 +395,33 @@ const Search: React.FC = () => {
 
       console.log('✅ Booking created successfully:', bookingResult);
       
-      // Call the edge function to send notifications
+      // Send email notification via SendGrid
       try {
-        const { error: functionError } = await supabase.functions.invoke('send-booking-notification', {
-          body: { record: bookingResult }
+        const { error: emailError } = await supabase.functions.invoke('send-booking-email', {
+          body: {
+            guestName: guestDetails.name,
+            guestEmail: guestDetails.email,
+            guestPhone: guestDetails.phone,
+            roomName: selectedRoom.name,
+            checkInDate: bookingDates.checkIn,
+            checkOutDate: bookingDates.checkOut,
+            guests: bookingDates.guests,
+            totalPrice: totalAmount,
+            specialRequests: guestDetails.specialRequests
+          }
         });
         
-        if (functionError) {
-          console.error('Notification error:', functionError);
+        if (emailError) {
+          console.error('SendGrid email error:', emailError);
+          alert('⚠️ Booking submitted successfully, but failed to send email notification.\n\nYour booking is confirmed. You will receive payment details shortly.');
         } else {
-          console.log('✅ Notifications sent successfully');
+          console.log('✅ SendGrid email sent successfully');
+          alert('✅ Booking submitted successfully!\n\nA notification has been sent to developmentteam86@gmail.com with all your booking details.\n\nYou will receive payment details via email shortly.');
         }
-      } catch (notificationError) {
-        console.error('Failed to send notification:', notificationError);
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError);
+        alert('⚠️ Booking submitted successfully, but failed to send email notification.\n\nYour booking is confirmed. You will receive payment details shortly.');
       }
-      
-      alert('✅ Booking submitted successfully!\n\nA notification has been sent to developmentteam86@gmail.com with all your booking details.\n\nYou will receive payment details via email shortly.');
       setSelectedRoom(null);
       setBookingDates({ checkIn: '', checkOut: '', guests: 1 });
       setGuestDetails({ name: '', email: '', phone: '', specialRequests: '' });
