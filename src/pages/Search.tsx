@@ -395,6 +395,21 @@ const Search: React.FC = () => {
 
       console.log('✅ Booking created successfully:', bookingResult);
       
+      // Call the edge function to send notifications
+      try {
+        const { error: functionError } = await supabase.functions.invoke('send-booking-notification', {
+          body: { record: bookingResult }
+        });
+        
+        if (functionError) {
+          console.error('Notification error:', functionError);
+        } else {
+          console.log('✅ Notifications sent successfully');
+        }
+      } catch (notificationError) {
+        console.error('Failed to send notification:', notificationError);
+      }
+      
       alert('✅ Booking submitted successfully!\n\nA notification has been sent to developmentteam86@gmail.com with all your booking details.\n\nYou will receive payment details via email shortly.');
       setSelectedRoom(null);
       setBookingDates({ checkIn: '', checkOut: '', guests: 1 });
