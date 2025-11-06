@@ -58,12 +58,12 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        notificationId: 'booking_notification',
-        user: {
+        type: 'booking_notification',
+        to: {
           id: adminEmail,
           email: adminEmail
         },
-        mergeTags: {
+        parameters: {
           booking_reference: bookingRef,
           room_name: roomName,
           room_type: roomType,
@@ -96,12 +96,12 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        notificationId: 'booking_confirmation',
-        user: {
+        type: 'booking_confirmation',
+        to: {
           id: booking.guest_email,
           email: booking.guest_email
         },
-        mergeTags: {
+        parameters: {
           guest_name: booking.guest_name,
           booking_reference: bookingRef,
           room_name: roomName,
