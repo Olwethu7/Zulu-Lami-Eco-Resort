@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, MapPin, Users, Mail } from "lucide-react";
+import { Calendar, MapPin, Users } from "lucide-react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -133,18 +133,7 @@ export const BookingHistory = () => {
                 <span className="font-semibold text-primary">
                   R{Number(booking.total_price).toFixed(2)}
                 </span>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => {
-                    const email = booking.guest_email || user?.email;
-                    if (email) {
-                      window.open(`https://mail.google.com/mail/u/${email}/#search/subject%3A"Confirmation+of+Your+Booking+Request"`, '_blank');
-                    }
-                  }}
-                  className="flex items-center gap-2"
-                >
-                  <Mail className="w-4 h-4" />
+                <Button size="sm" variant="outline">
                   View Details
                 </Button>
               </div>
