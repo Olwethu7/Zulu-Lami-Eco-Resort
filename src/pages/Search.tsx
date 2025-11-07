@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Users, Home, Check, Mail } from 'lucide-react';
+import { Users, Home } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Layout } from "@/components/layout/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -218,8 +217,6 @@ const Search: React.FC = () => {
     phone: '',
     specialRequests: ''
   });
-  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
-  const [bookingConfirmationEmail, setBookingConfirmationEmail] = useState("");
 
   // Fetch rooms from database
   const { data: rooms = [], isLoading, refetch } = useQuery({
@@ -416,19 +413,19 @@ const Search: React.FC = () => {
         
         if (emailError) {
           console.error('SendGrid email error:', emailError);
+          alert('⚠️ Booking submitted successfully, but failed to send email notification.\n\nYour booking is confirmed. You will receive payment details shortly.');
         } else {
           console.log('✅ SendGrid email sent successfully');
+          alert('✅ Booking submitted successfully!\n\nA notification has been sent to developmentteam86@gmail.com with all your booking details.\n\nYou will receive payment details via email shortly.');
         }
       } catch (emailError) {
         console.error('Failed to send email:', emailError);
+        alert('⚠️ Booking submitted successfully, but failed to send email notification.\n\nYour booking is confirmed. You will receive payment details shortly.');
       }
-      
-      // Show success dialog and store email
-      setBookingConfirmationEmail(guestDetails.email);
-      setIsSuccessDialogOpen(true);
       setSelectedRoom(null);
       setBookingDates({ checkIn: '', checkOut: '', guests: 1 });
       setGuestDetails({ name: '', email: '', phone: '', specialRequests: '' });
+      navigate('/bookings');
       
     } catch (error) {
       console.error('Booking error:', error);
@@ -605,46 +602,6 @@ const Search: React.FC = () => {
             onConfirm={handleConfirmBooking}
           />
         )}
-
-        {/* Success Confirmation Dialog */}
-        <Dialog open={isSuccessDialogOpen} onOpenChange={setIsSuccessDialogOpen}>
-          <DialogContent className="sm:max-w-md">
-            <div className="flex flex-col items-center text-center space-y-4 py-4">
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                <Check className="w-8 h-8 text-green-600 dark:text-green-400" />
-              </div>
-              
-              <div className="space-y-2">
-                <h3 className="text-2xl font-bold text-foreground">Booking Confirmed!</h3>
-                <p className="text-muted-foreground">
-                  Your booking request has been successfully submitted. A confirmation email with all the details has been sent to your email address.
-                </p>
-              </div>
-
-              <div className="w-full space-y-2 pt-4">
-                <button
-                  onClick={() => {
-                    window.open(`https://mail.google.com/mail/u/${bookingConfirmationEmail}`, '_blank');
-                  }}
-                  className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-                >
-                  <Mail className="w-5 h-5" />
-                  Check Your Email
-                </button>
-                
-                <button
-                  onClick={() => {
-                    setIsSuccessDialogOpen(false);
-                    navigate('/bookings');
-                  }}
-                  className="w-full bg-secondary text-secondary-foreground py-3 rounded-lg font-semibold hover:bg-secondary/90 transition-colors"
-                >
-                  View My Bookings
-                </button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
     </Layout>
   );
