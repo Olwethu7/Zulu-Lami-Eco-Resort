@@ -3,6 +3,7 @@ import { Header } from "./Header";
 import { BottomNavigation } from "./BottomNavigation";
 import { HamburgerMenu } from "./HamburgerMenu";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
+import { ChatWidget } from "@/components/chatbot/ChatWidget";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,6 +23,7 @@ export const Layout = ({ children }: LayoutProps) => {
       
       <BottomNavigation />
       <InstallPrompt />
+      <ChatWidget />
     </div>
   );
 };

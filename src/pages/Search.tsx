@@ -322,12 +322,48 @@ const Search: React.FC = () => {
       return;
     }
 
+    // Validate date range
+    const checkIn = new Date(bookingDates.checkIn);
+    const checkOut = new Date(bookingDates.checkOut);
+    
+    if (checkOut <= checkIn) {
+      alert('Check-out date must be after check-in date');
+      return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (checkIn < today) {
+      alert('Check-in date cannot be in the past');
+      return;
+    }
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
         alert('Please login to make a booking');
         navigate('/login');
+        return;
+      }
+
+      // Check room availability before booking
+      const { data: availabilityData, error: availabilityError } = await supabase
+        .rpc('check_room_availability', {
+          p_room_id: selectedRoom.id,
+          p_check_in: bookingDates.checkIn,
+          p_check_out: bookingDates.checkOut
+        });
+
+      if (availabilityError) {
+        console.error('Availability check error:', availabilityError);
+        alert('Failed to check room availability. Please try again.');
+        return;
+      }
+
+      if (availabilityData <= 0) {
+        alert('Sorry, this room is not available for the selected dates. Please choose different dates or another room.');
         return;
       }
 
@@ -344,8 +380,6 @@ const Search: React.FC = () => {
         return;
       }
 
-      const checkIn = new Date(bookingDates.checkIn);
-      const checkOut = new Date(bookingDates.checkOut);
       const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
       const totalAmount = selectedRoom.price * nights;
 
@@ -389,7 +423,13 @@ const Search: React.FC = () => {
         console.error('Booking insertion error:', error);
         console.error('Error details:', JSON.stringify(error, null, 2));
         console.error('Attempted booking data:', bookingData);
-        alert(`Booking failed: ${error.message}\n\nPlease check console for details or contact support.`);
+        
+        // Check for potential double-booking error
+        if (error.message.includes('overlapping') || error.message.includes('conflict')) {
+          alert('This room has just been booked by another guest. Please select different dates or another room.');
+        } else {
+          alert(`Booking failed: ${error.message}\n\nPlease check console for details or contact support.`);
+        }
         return;
       }
 
