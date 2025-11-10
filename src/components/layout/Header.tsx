@@ -57,6 +57,11 @@ export const Header = ({ onMenuToggle }: HeaderProps) => {
           <Link to="/gallery" className="text-sm font-medium transition-colors hover:text-primary">
             Gallery
           </Link>
+          {!user && (
+            <Link to="/admin/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
+              Admin
+            </Link>
+          )}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

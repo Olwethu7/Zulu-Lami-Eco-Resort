@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { AdminProtectedRoute } from "@/components/auth/AdminProtectedRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -36,6 +37,13 @@ const Settings = lazy(() => import("./pages/Settings"));
 const Help = lazy(() => import("./pages/Help"));
 const LocalArea = lazy(() => import("./pages/LocalArea"));
 const Gallery = lazy(() => import("./pages/Gallery"));
+
+// Admin pages
+const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminBookingManagement = lazy(() => import("./pages/admin/AdminBookingManagement"));
+const AdminBookings = lazy(() => import("./pages/admin/AdminBookings"));
+const AdminRooms = lazy(() => import("./pages/admin/AdminRooms"));
+const AdminContent = lazy(() => import("./pages/admin/AdminContent"));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -121,6 +129,48 @@ const App = () => {
             <Route path="/payment-proof/:bookingId" element={<PaymentProof />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/payment-cancel" element={<PaymentCancel />} />
+            
+            {/* Admin Routes */}
+            <Route
+              path="/admin/dashboard"
+              element={
+                <AdminProtectedRoute>
+                  <AdminDashboard />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/booking-management"
+              element={
+                <AdminProtectedRoute>
+                  <AdminBookingManagement />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/bookings"
+              element={
+                <AdminProtectedRoute>
+                  <AdminBookings />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/rooms"
+              element={
+                <AdminProtectedRoute>
+                  <AdminRooms />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/content"
+              element={
+                <AdminProtectedRoute>
+                  <AdminContent />
+                </AdminProtectedRoute>
+              }
+            />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
