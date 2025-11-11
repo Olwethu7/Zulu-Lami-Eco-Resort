@@ -86,7 +86,7 @@ export const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 md:bottom-4 w-80 md:w-96 bg-card border border-border rounded-lg shadow-xl z-40 flex flex-col max-h-[500px]">
+        <div className="fixed bottom-20 right-4 md:bottom-4 w-[90vw] md:w-96 max-w-md bg-card border border-border rounded-lg shadow-xl z-40 flex flex-col h-[500px]">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border bg-primary text-primary-foreground rounded-t-lg">
             <div className="flex items-center gap-2">

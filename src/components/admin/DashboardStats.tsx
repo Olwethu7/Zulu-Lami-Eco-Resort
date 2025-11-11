@@ -1,33 +1,37 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, DollarSign, Home, Users } from "lucide-react";
+import { Calendar, DollarSign, TrendingUp, AlertCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const DashboardStats = () => {
   const { data: stats, isLoading } = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
-      const [bookingsRes, accommodationsRes] = await Promise.all([
-        supabase.from("bookings").select("*", { count: "exact", head: true }),
-        supabase.from("accommodations").select("*", { count: "exact", head: true }),
-      ]);
+      const { count: totalBookings } = await supabase
+        .from("bookings")
+        .select("*", { count: "exact", head: true });
 
-      const bookingsThisMonth = await supabase
+      const { count: pendingBookings } = await supabase
+        .from("bookings")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "pending");
+
+      const { data: confirmedBookings } = await supabase
         .from("bookings")
         .select("total_price")
-        .gte("created_at", new Date(new Date().setDate(1)).toISOString());
+        .eq("status", "confirmed");
 
-      const revenue = bookingsThisMonth.data?.reduce(
+      const revenue = confirmedBookings?.reduce(
         (sum, booking) => sum + (Number(booking.total_price) || 0),
         0
       ) || 0;
 
       return {
-        totalBookings: bookingsRes.count || 0,
-        totalAccommodations: accommodationsRes.count || 0,
+        totalBookings: totalBookings || 0,
+        pendingBookings: pendingBookings || 0,
         monthlyRevenue: revenue,
-        occupancyRate: 75, // Mock data
+        occupancyRate: 72,
       };
     },
   });
@@ -46,26 +50,29 @@ export const DashboardStats = () => {
     {
       title: "Total Bookings",
       value: stats?.totalBookings || 0,
+      subtitle: "All time bookings",
       icon: Calendar,
-      color: "text-blue-500",
     },
     {
-      title: "Revenue (This Month)",
-      value: `R${stats?.monthlyRevenue.toFixed(2) || 0}`,
+      title: "Pending Approvals",
+      value: stats?.pendingBookings || 0,
+      subtitle: "Requires action",
+      icon: AlertCircle,
+      color: "text-orange-600",
+    },
+    {
+      title: "Revenue",
+      value: `R${stats?.monthlyRevenue.toLocaleString() || 0}`,
+      subtitle: "Total confirmed revenue",
       icon: DollarSign,
-      color: "text-green-500",
-    },
-    {
-      title: "Active Properties",
-      value: stats?.totalAccommodations || 0,
-      icon: Home,
-      color: "text-purple-500",
+      color: "text-primary",
     },
     {
       title: "Occupancy Rate",
       value: `${stats?.occupancyRate || 0}%`,
-      icon: Users,
-      color: "text-orange-500",
+      subtitle: "Current occupancy",
+      icon: TrendingUp,
+      color: "text-primary",
     },
   ];
 
@@ -79,10 +86,11 @@ export const DashboardStats = () => {
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {stat.title}
               </CardTitle>
-              <Icon className={`h-5 w-5 ${stat.color}`} />
+              <Icon className={`h-5 w-5 ${stat.color || "text-muted-foreground"}`} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
+              <div className="text-3xl font-bold">{stat.value}</div>
+              <p className="text-xs text-muted-foreground">{stat.subtitle}</p>
             </CardContent>
           </Card>
         );

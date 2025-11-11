@@ -2,7 +2,10 @@ import {
   Calendar,
   LogOut,
   User,
-  LayoutDashboard
+  LayoutDashboard,
+  Home,
+  Users,
+  BarChart3
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -22,23 +25,32 @@ export const AdminSidebar = () => {
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
-    { icon: Calendar, label: "Booking Management", path: "/admin/booking-management" },
+    { icon: Calendar, label: "Bookings", path: "/admin/booking-management" },
+    { icon: Home, label: "Rooms", path: "/admin/rooms" },
+    { icon: Users, label: "Customers", path: "/admin/customers" },
+    { icon: BarChart3, label: "Reports", path: "/admin/reports" },
   ];
 
   return (
-    <aside className="hidden md:flex w-64 flex-col border-r bg-sidebar">
-      <div className="p-6 border-b border-sidebar-border">
+    <aside className="hidden md:flex w-64 flex-col border-r bg-primary">
+      <div className="p-6 border-b border-primary-foreground/20">
         <div className="space-y-1">
-          <h2 className="font-montserrat text-xl font-bold text-sidebar-foreground">
-            Admin Panel
+          <h2 className="font-montserrat text-xl font-bold text-primary-foreground">
+            Zulu Lami
           </h2>
-          <p className="text-xs text-muted-foreground">
-            Zulu Lami Eco-Resort
+          <p className="text-xs text-primary-foreground/80">
+            Eco-Resort Admin
           </p>
         </div>
       </div>
       
-      <nav className="flex-1 p-4 space-y-2">
+      <div className="px-4 pt-4">
+        <p className="text-xs font-semibold text-primary-foreground/60 mb-2">
+          Management
+        </p>
+      </div>
+      
+      <nav className="flex-1 px-4 pb-4 space-y-1">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
@@ -46,12 +58,12 @@ export const AdminSidebar = () => {
           return (
             <Button
               key={item.path}
-              variant={isActive ? "secondary" : "ghost"}
+              variant="ghost"
               className={cn(
                 "w-full justify-start gap-3 h-11",
                 isActive 
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  ? "bg-primary-foreground/20 text-primary-foreground font-semibold" 
+                  : "text-primary-foreground/90 hover:bg-primary-foreground/10 hover:text-primary-foreground"
               )}
               onClick={() => navigate(item.path)}
             >
@@ -62,22 +74,10 @@ export const AdminSidebar = () => {
         })}
       </nav>
 
-      <div className="p-4 border-t border-sidebar-border space-y-2">
-        <div className="flex items-center gap-2 px-2 py-2 bg-sidebar-accent/50 rounded-md">
-          <User className="h-4 w-4 text-sidebar-foreground" />
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-sidebar-foreground truncate">
-              Administrator
-            </p>
-            <p className="text-[10px] text-muted-foreground truncate">
-              {user?.email}
-            </p>
-          </div>
-        </div>
-        
+      <div className="p-4 border-t border-primary-foreground/20 space-y-2">
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+          className="w-full justify-start gap-3 text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10"
           onClick={handleLogout}
         >
           <LogOut className="h-4 w-4" />

@@ -44,6 +44,8 @@ const AdminBookingManagement = lazy(() => import("./pages/admin/AdminBookingMana
 const AdminBookings = lazy(() => import("./pages/admin/AdminBookings"));
 const AdminRooms = lazy(() => import("./pages/admin/AdminRooms"));
 const AdminContent = lazy(() => import("./pages/admin/AdminContent"));
+const AdminCustomers = lazy(() => import("./pages/admin/AdminCustomers"));
+const AdminReports = lazy(() => import("./pages/admin/AdminReports"));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -168,6 +170,22 @@ const App = () => {
               element={
                 <AdminProtectedRoute>
                   <AdminContent />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/customers"
+              element={
+                <AdminProtectedRoute>
+                  <AdminCustomers />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/reports"
+              element={
+                <AdminProtectedRoute>
+                  <AdminReports />
                 </AdminProtectedRoute>
               }
             />
