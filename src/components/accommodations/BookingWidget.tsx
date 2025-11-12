@@ -25,6 +25,7 @@ export const BookingWidget = ({ roomId, pricePerNight }: BookingWidgetProps) => 
     roomId,
     dateRange?.from,
     dateRange?.to
+    
   );
 
   const nights = dateRange?.from && dateRange?.to
