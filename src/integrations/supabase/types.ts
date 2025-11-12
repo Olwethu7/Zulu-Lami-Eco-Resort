@@ -294,6 +294,7 @@ export type Database = {
           preferences?: Json | null
           updated_at?: string | null
         }
+        
         Update: {
           avatar_url?: string | null
           created_at?: string | null
