@@ -1,22 +1,35 @@
 {
   "compilerOptions": {
+    // Modern ECMAScript target for optimal performance
     "target": "ES2022",
+    
+    // Standard libraries for modern JavaScript features
     "lib": ["ES2023"],
+    
+    // Use latest module system for tree shaking and optimization
     "module": "ESNext",
+    
+    // Skip library type checks for faster compilation
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    /* Bundler mode configuration for Vite */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
 
-    /* Linting */
+    /* Linting and type safety */
     "strict": true,
+    
+    // Disabled for development flexibility
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    
+    // Ensure switch statement safety
     "noFallthroughCasesInSwitch": true
   },
+  
+  // Files included in this TypeScript configuration
   "include": ["vite.config.ts"]
 }
