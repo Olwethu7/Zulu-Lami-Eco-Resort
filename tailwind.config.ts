@@ -1,10 +1,23 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  // Dark mode configuration using CSS classes
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  
+  // Files where Tailwind should look for classes to generate
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}", 
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}"
+  ],
+  
+  // CSS prefix for utility classes (empty for no prefix)
   prefix: "",
+  
+  // Theme customization
   theme: {
+    // Container configuration for centered layouts
     container: {
       center: true,
       padding: "2rem",
@@ -12,12 +25,17 @@ export default {
         "2xl": "1400px",
       },
     },
+    
+    // Extended theme configurations
     extend: {
+      // Custom font families
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],
         sans: ['Open Sans', 'sans-serif'],
         script: ['Dancing Script', 'cursive'],
       },
+      
+      // Color system using CSS variables for theming
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -52,6 +70,7 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Sidebar-specific colors for navigation
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -63,11 +82,15 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      
+      // Border radius scale
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      
+      // Custom animations for UI components
       keyframes: {
         "accordion-down": {
           from: {
@@ -92,5 +115,7 @@ export default {
       },
     },
   },
+  
+  // Tailwind CSS plugins
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
