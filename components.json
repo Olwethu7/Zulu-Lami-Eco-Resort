@@ -1,20 +1,33 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
+  // Use the default component style from shadcn/ui
   "style": "default",
+  // Not using React Server Components (traditional client-side React)
   "rsc": false,
+  // Using TypeScript with JSX
   "tsx": true,
   "tailwind": {
+    // Path to Tailwind CSS configuration file
     "config": "tailwind.config.ts",
+    // Path to main CSS file where Tailwind directives are imported
     "css": "src/index.css",
+    // Base color palette for components
     "baseColor": "slate",
+    // Enable CSS custom properties for theming
     "cssVariables": true,
+    // No prefix for Tailwind classes
     "prefix": ""
   },
   "aliases": {
+    // Path alias for components directory
     "components": "@/components",
+    // Path alias for utility functions
     "utils": "@/lib/utils",
+    // Path alias for UI components
     "ui": "@/components/ui",
+    // Path alias for library utilities
     "lib": "@/lib",
+    // Path alias for custom React hooks
     "hooks": "@/hooks"
   }
 }
