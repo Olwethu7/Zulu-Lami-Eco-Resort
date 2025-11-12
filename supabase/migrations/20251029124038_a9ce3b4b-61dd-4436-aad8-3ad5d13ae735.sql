@@ -1,5 +1,6 @@
 -- Seed database with Zulu Lami accommodation and all rooms
 
+
 -- First, insert the main accommodation
 INSERT INTO accommodations (
   id,
