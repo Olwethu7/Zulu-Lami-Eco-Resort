@@ -8,6 +8,7 @@ interface BookingSummaryProps {
     id: string;
     name: string;
     type: string | null;
+    
     price_per_night: number | null;
     images: string[] | null;
   };
