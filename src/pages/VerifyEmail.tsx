@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
+
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
