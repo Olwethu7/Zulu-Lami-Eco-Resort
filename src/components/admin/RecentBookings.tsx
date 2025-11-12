@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 
+
 export const RecentBookings = () => {
   const { data: bookings, isLoading } = useQuery<Array<any>>({
     queryKey: ["recent-bookings"],
