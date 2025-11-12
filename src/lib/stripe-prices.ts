@@ -14,3 +14,4 @@ export const getPriceIdForRoomType = (roomType: string): string | null => {
   const normalizedType = roomType.toLowerCase() as RoomType;
   return STRIPE_PRICE_IDS[normalizedType] || null;
 };
+
