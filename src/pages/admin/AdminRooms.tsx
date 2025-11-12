@@ -17,3 +17,4 @@ const AdminRooms = () => {
 };
 
 export default AdminRooms;
+
