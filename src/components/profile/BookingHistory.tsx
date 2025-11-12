@@ -1,17 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCancelBooking, useDeleteBooking } from "@/hooks/useBookings";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, MapPin, Users } from "lucide-react";
-import { format } from "date-fns";
+import { Calendar, Users, Trash2, X } from "lucide-react";
+import { format, isPast } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export const BookingHistory = () => {
   const { user } = useAuth();
+  const cancelBooking = useCancelBooking();
+  const deleteBooking = useDeleteBooking();
 
   const { data: bookings, isLoading } = useQuery({
     queryKey: ["bookings", user?.id],
@@ -83,6 +87,8 @@ export const BookingHistory = () => {
     const roomName = booking.rooms?.name || "Room";
     const accommodationName = booking.rooms?.accommodations?.name || "Zulu Lami Eco-Resort";
     const roomImage = booking.rooms?.images?.[0] || "/placeholder.svg";
+    const canCancel = booking.status === "pending" || booking.status === "confirmed";
+    const isUpcoming = booking.check_in_date && !isPast(new Date(booking.check_in_date));
     
     return (
       <Card>
@@ -102,6 +108,11 @@ export const BookingHistory = () => {
                   <p className="text-sm text-muted-foreground">
                     {accommodationName}
                   </p>
+                  {booking.guest_name && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Guest: {booking.guest_name}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-1 items-end">
                   <Badge className={getStatusColor(booking.status)}>
@@ -129,13 +140,60 @@ export const BookingHistory = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-between pt-2 gap-2">
                 <span className="font-semibold text-primary">
                   R{Number(booking.total_price).toFixed(2)}
                 </span>
-                <Button size="sm" variant="outline">
-                  View Details
-                </Button>
+                <div className="flex gap-2">
+                  {canCancel && isUpcoming && (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button size="sm" variant="outline">
+                          <X className="w-4 h-4 mr-1" />
+                          Cancel
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Cancel Booking</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to cancel this booking? This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>No, keep it</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => cancelBooking.mutate(booking.id)}>
+                            Yes, cancel booking
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                  {booking.status === "cancelled" && (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button size="sm" variant="destructive">
+                          <Trash2 className="w-4 h-4 mr-1" />
+                          Delete
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Booking</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to permanently delete this booking record?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => deleteBooking.mutate(booking.id)}>
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                </div>
               </div>
             </div>
           </div>
