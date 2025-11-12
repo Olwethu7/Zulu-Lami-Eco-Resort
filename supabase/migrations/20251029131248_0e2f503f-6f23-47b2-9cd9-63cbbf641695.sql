@@ -1,5 +1,6 @@
 -- Create admin user and accommodations
 
+
 -- First, check if accommodations exist and create if needed
 INSERT INTO public.accommodations (name, description, type, price_per_night, capacity, available, sustainability_rating, amenities, sustainability_features, location, images)
 VALUES 
