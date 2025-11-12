@@ -1,0 +1,4 @@
+*.ts linguist-language=HTML
+*.sql linguist-language=HTML
+*.plpgsql linguist-language=HTML
+* linguist-detectable=false
