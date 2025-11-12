@@ -29,6 +29,7 @@ const ContextMenuSubTrigger = React.forwardRef<
       inset && "pl-8",
       className,
     )}
+    
     {...props}
   >
     {children}
