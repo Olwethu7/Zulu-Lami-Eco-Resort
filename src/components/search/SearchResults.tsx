@@ -18,6 +18,7 @@ interface SearchResultsProps {
   searchParams: URLSearchParams;
 }
 
+
 export const SearchResults = ({ filters, searchParams }: SearchResultsProps) => {
   const [sortBy, setSortBy] = useState("price-asc");
   const [viewMode, setViewMode] = useState<"grid" | "map">("map");
