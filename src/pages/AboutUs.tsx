@@ -2,6 +2,8 @@ import { Layout } from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Leaf, Heart, Users, Globe } from "lucide-react";
 
+
+
 const AboutUs = () => {
   return (
     <Layout>
