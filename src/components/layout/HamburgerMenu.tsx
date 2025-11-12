@@ -11,6 +11,7 @@ import {
 interface HamburgerMenuProps {
   open: boolean;
   onClose: () => void;
+  
 }
 
 export const HamburgerMenu = ({ open, onClose }: HamburgerMenuProps) => {
