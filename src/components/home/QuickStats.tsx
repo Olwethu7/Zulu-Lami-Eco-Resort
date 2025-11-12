@@ -7,6 +7,7 @@ const stats = [
   { icon: Heart, value: "10,000+", label: "Happy Guests" },
 ];
 
+
 export const QuickStats = () => {
   return (
     <section className="py-12 bg-primary text-background">
