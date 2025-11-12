@@ -1,39 +1,60 @@
-# Zululami Eco Resort
+Zululami Eco Resort
 
-A modern, responsive web application for Zululami Eco Resort built with cutting-edge web technologies to provide an exceptional user experience.
+A modern, responsive web application for Zululami Eco Resort built with Kotlin and contemporary web tooling to provide an exceptional user experience.
 
-## 🏨 Project Overview
+🏨 Project Overview
 
-Zululami Eco Resort is a contemporary web application designed with performance, scalability, and user-friendly design at its core. It leverages the latest web technologies and follows industry best practices to ensure smooth development and easy maintenance.
+Zululami Eco Resort is a contemporary web application designed with performance, scalability, and user-friendly design at its core. It leverages Kotlin for server- and/or client-side logic and follows industry best practices to ensure smooth development and easy maintenance.
 
-## 🚀 Features
+🚀 Features
 
-- **Modern Design**: Clean, responsive layout optimized for all devices
-- **Fast Performance**: Built with Vite for lightning-fast development and optimized builds
-- **Type Safety**: Full TypeScript implementation for robust code
-- **Beautiful UI**: Tailwind CSS with shadcn-ui components for consistent styling
-- **User-Friendly**: Intuitive navigation and booking experience
+Modern Design: Clean, responsive layout optimized for all devices
 
-## 🛠️ Technologies Used
+Fast Performance: Lightweight, idiomatic Kotlin server (Ktor) for efficient request handling
 
-- **Vite** - Fast development and optimized builds
-- **React** - Dynamic user interfaces
-- **TypeScript** - Structured and type-safe coding
-- **Tailwind CSS** - Efficient utility-first styling
-- **shadcn-ui** - Clean and reusable components
+Type Safety: Full Kotlin + kotlinx.serialization for robust, compile-time safety
 
-## 📥 Installation & Setup
+Beautiful UI: Tailwind CSS (optional) for consistent styling and fast layout work
 
-### Prerequisites
+User-Friendly: Intuitive navigation and booking experience
 
-Before you begin, ensure you have the following installed on your system:
-- **Node.js** (version 16 or higher)
-- **npm** or **yarn** package manager
-- **Git** for version control
+Production-ready: Gradle build, Docker-friendly, and database migrations supported
 
-### Step-by-Step Installation
+🛠️ Technologies Used
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/zululami-eco-resort.git
-   cd zululami-eco-resort
+Kotlin — Primary language for backend (and optional frontend)
+
+Ktor — Kotlin asynchronous web framework for API and server
+
+Gradle (Kotlin DSL) — Build and dependency management
+
+kotlinx.serialization — JSON serialization
+
+Exposed / Hibernate / JPA — (pick one) database access layer
+
+Flyway — Database migrations
+
+Tailwind CSS — Styling (optional; can be replaced by any CSS approach)
+
+PostgreSQL — Recommended production database
+
+Docker & Docker Compose — Containerized development & production
+
+Note: TypeScript, React, and Vite have been removed from this project because the team decided to use Kotlin for application logic.
+
+📥 Installation & Setup
+Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+JDK 17 or later (Kotlin + Ktor are tested on JDK 17+)
+
+Git
+
+Docker & Docker Compose (optional but recommended for local stack)
+
+(Optional) Node.js + npm — only required if you want to build Tailwind locally or use a node-based CSS toolchain
+
+IntelliJ IDEA (Community or Ultimate) — recommended for Kotlin development
+
+This repo uses the Gradle wrapper (./gradlew) so you don't need a separate Gradle install.
