@@ -3,6 +3,7 @@ import doubleRoom from "@/assets/rooms/double.jpg";
 import familyRoom from "@/assets/rooms/family.jpg";
 import eventHall from "@/assets/rooms/event.jpg";
 
+
 export interface RoomType {
   id: string;
   name: string;
