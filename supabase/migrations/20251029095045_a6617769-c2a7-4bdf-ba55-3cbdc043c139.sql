@@ -1,4 +1,5 @@
 -- Add new columns to bookings table for enhanced booking system
+
 ALTER TABLE public.bookings 
 ADD COLUMN IF NOT EXISTS guest_name TEXT,
 ADD COLUMN IF NOT EXISTS guest_email TEXT,
