@@ -1,30 +1,44 @@
 {
   "compilerOptions": {
+    // Modern ECMAScript target for broad browser compatibility
     "target": "ES2020",
+    
+    // Use modern class fields implementation
     "useDefineForClassFields": true,
+    
+    // Standard libraries for web development
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    
+    // Latest module system for optimal bundling
     "module": "ESNext",
+    
+    // Skip library checks for faster compilation
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    /* Bundler mode configuration optimized for Vite */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
+    
+    // React JSX transformation (no need for React import)
     "jsx": "react-jsx",
 
-    /* Linting */
+    /* Linting - Relaxed rules for development flexibility */
     "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
 
+    /* Path mapping for clean import organization */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
+  
+  // Source files included in the application build
   "include": ["src"]
 }
