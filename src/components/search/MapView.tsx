@@ -11,6 +11,7 @@ export const MapView = ({ accommodations }: MapViewProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [mapboxToken, setMapboxToken] = useState<string>("");
+  
 
   useEffect(() => {
     // Fetch token from Supabase edge function or use hardcoded for now
