@@ -1,4 +1,5 @@
 -- Fix search_path for check_booking_overlap function
+
 CREATE OR REPLACE FUNCTION public.check_booking_overlap()
 RETURNS trigger
 LANGUAGE plpgsql
