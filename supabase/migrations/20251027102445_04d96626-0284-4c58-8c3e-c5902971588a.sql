@@ -1,5 +1,6 @@
 -- Add missing columns to accommodations table
 ALTER TABLE public.accommodations 
+  
 ADD COLUMN IF NOT EXISTS location text,
 ADD COLUMN IF NOT EXISTS sustainability_features text[],
 ADD COLUMN IF NOT EXISTS sustainability_rating numeric;
