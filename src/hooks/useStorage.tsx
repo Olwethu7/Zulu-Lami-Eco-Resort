@@ -23,6 +23,7 @@ export const useFileUpload = (bucket: string) => {
           upsert: false,
         });
       
+      
 
       if (uploadError) throw uploadError;
 
