@@ -1,6 +1,7 @@
 import { AdminSidebar } from "@/components/layout/AdminSidebar";
 import { BookingsTable } from "@/components/admin/BookingsTable";
 
+
 const AdminBookings = () => {
   return (
     <div className="flex min-h-screen">
