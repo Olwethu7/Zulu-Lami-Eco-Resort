@@ -1,4 +1,5 @@
 -- Clean up duplicate rooms and create standardized entries
+
 DELETE FROM rooms;
 
 -- Create accommodation entry if it doesn't exist
