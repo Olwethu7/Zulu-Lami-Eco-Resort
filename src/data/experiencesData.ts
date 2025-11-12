@@ -8,6 +8,7 @@ import braaiPlatterImg from '@/assets/experiences/braai-platter.jpg';
 import barSetupImg from '@/assets/experiences/bar-setup.jpg';
 import breakfastPlateImg from '@/assets/experiences/breakfast-plate.jpg';
 
+
 export interface ExperienceItem {
   id: string;
   title: string;
