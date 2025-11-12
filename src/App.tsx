@@ -10,6 +10,7 @@ import { AdminProtectedRoute } from "@/components/auth/AdminProtectedRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 
+
 // Create QueryClient outside component to avoid re-creation
 const queryClient = new QueryClient({
   defaultOptions: {
