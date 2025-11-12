@@ -1,4 +1,5 @@
 -- Create app_role enum if it doesn't exist
+
 DO $$ BEGIN
   CREATE TYPE public.app_role AS ENUM ('admin', 'moderator', 'user');
 EXCEPTION
