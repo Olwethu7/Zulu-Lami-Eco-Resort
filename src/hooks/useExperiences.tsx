@@ -6,6 +6,7 @@ type ExperienceCategory = "tour" | "workshop" | "dining" | "learning";
 export const useExperiences = (category?: ExperienceCategory) => {
   return useQuery({
     queryKey: ["experiences", category],
+    
     queryFn: async () => {
       let query = supabase
         .from("experiences")
