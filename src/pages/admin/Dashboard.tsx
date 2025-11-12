@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
+
 const AdminDashboard = () => {
   const { data: pendingCount } = useQuery({
     queryKey: ["pending-bookings-count"],
