@@ -4,6 +4,7 @@ import { Calendar, CheckCircle, XCircle, DollarSign } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 export const RecentActivity = () => {
+  
   const { data: activities } = useQuery({
     queryKey: ["recent-activity"],
     queryFn: async () => {
