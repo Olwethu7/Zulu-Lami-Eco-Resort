@@ -56,3 +56,60 @@ The admin user can:
 - Change the default password after first login
 - Admin actions are logged for audit purposes
 - Only users with admin role can access the admin panel
+
+## Additional Admin Features
+
+### User Management
+- View all registered users and their profiles
+- Monitor user activity and booking history
+- Manage user roles and permissions
+
+### Content Management
+- Add and edit accommodation listings
+- Upload and manage property photos
+- Update pricing and availability calendars
+- Manage cultural experience offerings
+
+### Analytics & Reporting
+- View occupancy rates and revenue trends
+- Generate booking reports by date range
+- Monitor popular accommodations and experiences
+- Track seasonal booking patterns
+
+### System Settings
+- Configure booking policies and cancellation rules
+- Manage seasonal pricing adjustments
+- Set up promotional offers and discounts
+- Configure email notification templates
+
+## Troubleshooting
+
+### Common Issues and Solutions
+
+**Issue: Cannot access admin panel after role assignment**
+- Solution: Log out completely and log back in to refresh authentication token
+
+**Issue: SQL command fails to execute**
+- Solution: Verify the email address matches exactly and user exists in auth.users table
+
+**Issue: Admin privileges not working**
+- Solution: Check user_roles table to confirm admin role is properly assigned
+
+**Issue: Real-time updates not showing**
+- Solution: Verify Supabase real-time subscriptions are enabled for the bookings table
+
+### Best Practices
+
+- Create backup admin accounts for redundancy
+- Regularly review admin access logs
+- Implement two-factor authentication for admin accounts
+- Schedule regular database backups
+- Monitor system performance and error logs
+
+## Support
+
+For technical support with admin setup:
+1. Check the system logs for error messages
+2. Verify database connections and permissions
+3. Contact system administrator for role assignment issues
+4. Review application documentation for additional guidance
