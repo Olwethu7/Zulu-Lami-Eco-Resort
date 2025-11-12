@@ -1,16 +1,28 @@
 {
+  // Project references for monorepo-style configuration
   "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  
   "compilerOptions": {
+    // Base directory for module resolution
     "baseUrl": ".",
+    
+    // Path mapping for clean import aliases
     "paths": {
       "@/*": ["./src/*"]
     },
+    
+    // Type checking relaxation for development flexibility
     "noImplicitAny": false,
     "noUnusedParameters": false,
-    "skipLibCheck": true,
-    "allowJs": true,
     "noUnusedLocals": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    
+    // Performance and compatibility options
+    "skipLibCheck": true,
+    "allowJs": true
   }
 }
