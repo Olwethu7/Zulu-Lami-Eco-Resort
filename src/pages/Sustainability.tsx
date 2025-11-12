@@ -2,6 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Sun, Droplet, Recycle, TreePine, Wind, Lightbulb } from "lucide-react";
 
+
 const Sustainability = () => {
   return (
     <Layout>
