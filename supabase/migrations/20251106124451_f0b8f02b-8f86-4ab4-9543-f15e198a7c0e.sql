@@ -1,4 +1,6 @@
 -- Create trigger to automatically send notifications when a booking is created
+
+
 CREATE OR REPLACE FUNCTION public.trigger_send_booking_notification()
 RETURNS trigger
 LANGUAGE plpgsql
