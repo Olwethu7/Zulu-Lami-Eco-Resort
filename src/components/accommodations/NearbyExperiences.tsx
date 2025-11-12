@@ -19,6 +19,7 @@ export const NearbyExperiences = () => {
       
       if (error) throw error;
       return data;
+      
     },
   });
 
